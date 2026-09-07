@@ -1,54 +1,53 @@
-# Money Flow - 50/30/20 Finance Dashboard
+# Money Flow – Web Dashboard 50/30/20
 
-A responsive static web dashboard for personal budgeting with the 50/30/20 rule.
+Dashboard สำหรับจัดการรายรับตามสูตร 50/30/20 ใช้งานได้ทั้งคอมพิวเตอร์ แท็บเล็ต และโทรศัพท์ โดยไม่ต้องติดตั้งฐานข้อมูลหรือระบบ Build
 
-![Dashboard preview](preview.png)
+![Desktop preview](preview.png)
 
-## Included features
+## จุดที่ปรับปรุงใน Version 2
 
-- Monthly income, expenses, savings, and remaining balance KPIs
-- Target-versus-actual 50/30/20 analysis
-- Allocation donut and comparison chart without external libraries
-- Add, edit, delete, search, and filter transactions
-- Twelve-month summary and savings-rate trend
-- Editable ratios, categories, and payment methods
-- Automatic browser saving with `localStorage`
-- JSON backup/restore, CSV export, and print/PDF layout
-- Responsive layout for desktop, tablet, and mobile
-- No build command, package manager, database, or external CDN required
+- แก้ Mobile UI ให้ข้อมูลไม่ถูกตัดด้านขวา
+- เปลี่ยนตาราง 50/30/20 รายการเงิน และสรุปรายเดือนให้เป็นการ์ดเมื่อเปิดบนโทรศัพท์
+- แสดงเป้าหมาย งบเป้าหมาย ยอดจริง เปอร์เซ็นต์ ส่วนต่าง และสถานะครบทุกช่อง
+- แสดงจำนวนเงินของแต่ละรายการบน Mobile ครบถ้วน
+- เพิ่มชื่อเมนูใต้ไอคอนบน Mobile
+- ทำ `index.html` เป็นไฟล์แบบ Standalone มี CSS และ JavaScript อยู่ภายในไฟล์เดียว
+- ป้องกันปัญหา UI ไม่สมบูรณ์จากการอัปโหลดโฟลเดอร์ `assets` ไม่ครบ
 
-## Publish with GitHub Pages
+## วิธีนำขึ้น GitHub Pages
 
-1. Create a new GitHub repository.
-2. Upload the contents of this folder to the repository root.
-3. Open **Settings > Pages**.
-4. Under **Build and deployment**, choose **Deploy from a branch**.
-5. Select the `main` branch and the `/(root)` folder, then save.
-6. Open the GitHub Pages address shown by GitHub after deployment.
+1. สร้าง Repository ใหม่ใน GitHub
+2. อัปโหลดไฟล์ `index.html` ไว้ที่หน้าแรกของ Repository
+3. อัปโหลด `.nojekyll` และไฟล์อื่นในชุดนี้ได้ตามปกติ
+4. เปิด `Settings > Pages`
+5. เลือก `Deploy from a branch`
+6. เลือก Branch `main` และ Folder `/(root)`
+7. กด `Save`
 
-Official documentation:
-https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site
+ไฟล์สำคัญจริง ๆ สำหรับเปิด Dashboard คือ `index.html` เพียงไฟล์เดียว
 
-## Data storage and privacy
+## ฟังก์ชันหลัก
 
-This project is a static website. Transaction data is stored only in the current browser through `localStorage`; it is not written to the GitHub repository and does not automatically synchronize between devices or browsers.
+- Dashboard รายรับ ค่าใช้จ่าย เงินออม/ลงทุน และเงินคงเหลือ
+- เปรียบเทียบเป้าหมายกับยอดจริงตามสูตร 50/30/20
+- กราฟสัดส่วนเงินจริงและกราฟเปรียบเทียบเป้าหมาย
+- เพิ่ม แก้ไข ลบ ค้นหา และกรองรายการเงิน
+- สรุปผลรายเดือนและอัตราการออมรายปี
+- ปรับสัดส่วน หมวดย่อย และช่องทางชำระเงิน
+- Export CSV
+- Backup และ Restore ด้วย JSON
+- Print หรือ Save เป็น PDF
+- บันทึกข้อมูลด้วย `localStorage` ภายในเบราว์เซอร์
 
-Use **Backup JSON** before changing device, clearing browser data, or using private browsing. Use **Restore JSON** to load the backup on another browser.
+## การเก็บข้อมูล
 
-## Files
+ข้อมูลที่กรอกจะเก็บอยู่ในเบราว์เซอร์ของอุปกรณ์นั้น ไม่ถูกบันทึกลง GitHub และไม่ Sync ข้ามอุปกรณ์โดยอัตโนมัติ ควรใช้ `Backup JSON` ก่อนล้างข้อมูลเบราว์เซอร์หรือย้ายอุปกรณ์
 
-- `index.html` - application shell
-- `assets/css/styles.css` - responsive user interface
-- `assets/js/seed.js` - default categories and sample data from the original workbook
-- `assets/js/app.js` - calculations, charts, storage, import/export, and interactions
-- `.nojekyll` - tells GitHub Pages to serve the static files directly
+## โครงสร้างไฟล์
 
-## Local use
-
-The dashboard can usually be opened directly by double-clicking `index.html`. A local server is also supported:
-
-```bash
-python -m http.server 8000
-```
-
-Then open `http://localhost:8000`.
+- `index.html` – Dashboard แบบ Standalone พร้อมใช้งานทันที
+- `preview.png` – ภาพตัวอย่าง Desktop
+- `mobile-preview.png` – ภาพตัวอย่าง Mobile
+- `assets/` – Source แยกไฟล์สำหรับผู้ที่ต้องการแก้ CSS หรือ JavaScript
+- `index.source.html` – HTML ต้นฉบับที่อ้างอิง Source ในโฟลเดอร์ `assets`
+- `.nojekyll` – ให้ GitHub Pages เสิร์ฟไฟล์ Static โดยตรง
