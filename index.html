@@ -1,0 +1,457 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0f172a">
+  <meta name="description" content="Personal finance dashboard based on the 50/30/20 budgeting rule.">
+  <title>50/30/20 Finance Dashboard</title>
+  <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./assets/css/styles.css">
+</head>
+<body>
+  <noscript>
+    <div class="noscript">This dashboard requires JavaScript.</div>
+  </noscript>
+
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Main navigation">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <span>50</span><span>30</span><span>20</span>
+        </div>
+        <div>
+          <strong>Money Flow</strong>
+          <small>50 / 30 / 20</small>
+        </div>
+      </div>
+
+      <nav class="main-nav">
+        <button class="nav-button is-active" type="button" data-view="dashboard">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13h6V4H4v9Zm0 7h6v-5H4v5Zm10 0h6v-9h-6v9Zm0-16v5h6V4h-6Z"/></svg>
+          <span data-i18n="dashboard">Dashboard</span>
+        </button>
+        <button class="nav-button" type="button" data-view="transactions">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Zm2 4v2h10V7H7Zm0 4v2h6v-2H7Zm0 4v2h8v-2H7Z"/></svg>
+          <span data-i18n="transactions">Transactions</span>
+        </button>
+        <button class="nav-button" type="button" data-view="summary">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19h16v2H2V3h2v16Zm4-2H6v-6h2v6Zm5 0h-2V6h2v11Zm5 0h-2V9h2v8Z"/></svg>
+          <span data-i18n="summary">Monthly summary</span>
+        </button>
+        <button class="nav-button" type="button" data-view="settings">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.14 12.94c.04-.31.06-.63.06-.94s-.02-.63-.07-.94l2.03-1.58-1.92-3.32-2.39.96a7.2 7.2 0 0 0-1.62-.94L14.87 3h-3.74l-.36 3.18c-.58.24-1.12.55-1.62.94l-2.39-.96-1.92 3.32 2.03 1.58c-.05.31-.07.64-.07.94 0 .31.02.63.07.94l-2.03 1.58 1.92 3.32 2.39-.96c.5.39 1.04.7 1.62.94l.36 3.18h3.74l.36-3.18c.58-.24 1.12-.55 1.62-.94l2.39.96 1.92-3.32-2.02-1.58ZM13 15.5A3.5 3.5 0 1 1 13 8a3.5 3.5 0 0 1 0 7.5Z"/></svg>
+          <span data-i18n="settings">Settings</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-note">
+        <span class="privacy-dot" aria-hidden="true"></span>
+        <p data-i18n="localStorageNote">Data is stored in this browser.</p>
+      </div>
+    </aside>
+
+    <main class="app-main">
+      <header class="topbar">
+        <div class="topbar-copy">
+          <p class="eyebrow">PERSONAL FINANCE</p>
+          <h1 id="view-title">Dashboard</h1>
+          <p id="view-subtitle">50/30/20 overview</p>
+        </div>
+
+        <div class="topbar-tools">
+          <label class="month-control" for="month-input">
+            <span data-i18n="selectedMonth">Month</span>
+            <input id="month-input" type="month" aria-label="Selected month">
+          </label>
+          <button class="button button-secondary" id="print-button" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9V2h12v7h1a3 3 0 0 1 3 3v6h-4v4H6v-4H2v-6a3 3 0 0 1 3-3h1Zm2-5v5h8V4H8Zm8 16v-5H8v5h8Zm2-5h2v-3a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v3h2v-2h12v2Z"/></svg>
+            <span data-i18n="printReport">Print</span>
+          </button>
+          <button class="button button-primary" id="add-transaction-button" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6V5Z"/></svg>
+            <span data-i18n="addTransaction">Add transaction</span>
+          </button>
+        </div>
+      </header>
+
+      <div class="content-wrap">
+        <section class="view is-active" id="view-dashboard" data-view-panel="dashboard" aria-labelledby="view-title">
+          <div class="kpi-grid">
+            <article class="kpi-card kpi-income">
+              <div class="kpi-icon" aria-hidden="true">IN</div>
+              <div>
+                <p data-i18n="incomeTotal">Income</p>
+                <strong id="kpi-income">0</strong>
+                <small id="kpi-income-note">0 transactions</small>
+              </div>
+            </article>
+            <article class="kpi-card kpi-expense">
+              <div class="kpi-icon" aria-hidden="true">OUT</div>
+              <div>
+                <p data-i18n="expenseTotal">Expenses</p>
+                <strong id="kpi-expense">0</strong>
+                <small id="kpi-expense-note">Needs + wants</small>
+              </div>
+            </article>
+            <article class="kpi-card kpi-savings">
+              <div class="kpi-icon" aria-hidden="true">SAVE</div>
+              <div>
+                <p data-i18n="savingsTotal">Savings</p>
+                <strong id="kpi-savings">0</strong>
+                <small id="kpi-savings-note">0% of income</small>
+              </div>
+            </article>
+            <article class="kpi-card kpi-remaining">
+              <div class="kpi-icon" aria-hidden="true">BAL</div>
+              <div>
+                <p data-i18n="remaining">Remaining</p>
+                <strong id="kpi-remaining">0</strong>
+                <small id="kpi-remaining-note">After all allocations</small>
+              </div>
+            </article>
+          </div>
+
+          <div class="dashboard-grid">
+            <article class="panel budget-panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="section-kicker">50 / 30 / 20</p>
+                  <h2 data-i18n="budgetAllocation">Budget allocation</h2>
+                </div>
+                <span class="month-chip" id="dashboard-month-label"></span>
+              </div>
+              <div class="table-scroll">
+                <table class="data-table budget-table">
+                  <thead>
+                    <tr>
+                      <th data-i18n="group">Group</th>
+                      <th data-i18n="target">Target</th>
+                      <th data-i18n="targetBudget">Target budget</th>
+                      <th data-i18n="actual">Actual</th>
+                      <th data-i18n="percentIncome">% income</th>
+                      <th data-i18n="variance">Variance</th>
+                      <th data-i18n="status">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="budget-table-body"></tbody>
+                </table>
+              </div>
+            </article>
+
+            <article class="panel allocation-panel">
+              <div class="panel-heading compact">
+                <div>
+                  <p class="section-kicker">STRUCTURE</p>
+                  <h2 data-i18n="actualAllocation">Actual allocation</h2>
+                </div>
+              </div>
+              <div class="donut-wrap">
+                <div class="donut" id="allocation-donut" role="img" aria-label="Allocation chart">
+                  <div class="donut-center">
+                    <strong id="donut-percent">0%</strong>
+                    <span data-i18n="usedAllocated">Used</span>
+                  </div>
+                </div>
+                <div class="legend" id="allocation-legend"></div>
+              </div>
+            </article>
+
+            <article class="panel comparison-panel">
+              <div class="panel-heading compact">
+                <div>
+                  <p class="section-kicker">CONTROL</p>
+                  <h2 data-i18n="targetVsActual">Target vs actual</h2>
+                </div>
+                <div class="chart-key" aria-hidden="true">
+                  <span><i class="key-target"></i>Target</span>
+                  <span><i class="key-actual"></i>Actual</span>
+                </div>
+              </div>
+              <div class="bar-chart" id="comparison-chart"></div>
+            </article>
+
+            <article class="panel advice-panel">
+              <div class="advice-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M9 21h6v-1H9v1Zm3-20a7 7 0 0 0-4 12.74V17a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-3.26A7 7 0 0 0 12 1Zm2.85 11.1-.85.51V17h-4v-4.39l-.85-.51A5 5 0 1 1 14.85 12.1Z"/></svg>
+              </div>
+              <div>
+                <p class="section-kicker" data-i18n="automaticAdvice">Automatic advice</p>
+                <h2 id="advice-title">Financial guidance</h2>
+                <p id="advice-text"></p>
+              </div>
+            </article>
+          </div>
+
+          <article class="panel recent-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="section-kicker">LATEST</p>
+                <h2 data-i18n="recentTransactions">Recent transactions</h2>
+              </div>
+              <button class="text-button" type="button" data-go-view="transactions">View all</button>
+            </div>
+            <div class="table-scroll">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th data-i18n="date">Date</th>
+                    <th data-i18n="item">Item</th>
+                    <th data-i18n="category">Category</th>
+                    <th data-i18n="group">Group</th>
+                    <th class="align-right" data-i18n="amount">Amount</th>
+                  </tr>
+                </thead>
+                <tbody id="recent-table-body"></tbody>
+              </table>
+            </div>
+          </article>
+        </section>
+
+        <section class="view" id="view-transactions" data-view-panel="transactions" aria-labelledby="view-title">
+          <article class="panel">
+            <div class="panel-heading transaction-heading">
+              <div>
+                <p class="section-kicker">CASH FLOW</p>
+                <h2 data-i18n="transactionsTitle">Transactions</h2>
+                <p class="muted" data-i18n="transactionsHint"></p>
+              </div>
+              <div class="toolbar">
+                <div class="search-field">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21 19.6-4.35-4.35a7.5 7.5 0 1 0-1.4 1.4L19.6 21 21 19.6ZM5 11a6 6 0 1 1 12 0 6 6 0 0 1-12 0Z"/></svg>
+                  <input id="transaction-search" type="search" placeholder="Search" aria-label="Search transactions">
+                </div>
+                <select id="transaction-group-filter" aria-label="Filter group">
+                  <option value="all">All groups</option>
+                  <option value="income">Income</option>
+                  <option value="needs">Needs</option>
+                  <option value="wants">Wants</option>
+                  <option value="savings">Savings</option>
+                </select>
+                <button class="button button-secondary" id="export-csv-button" type="button">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 3h2v10l3.5-3.5 1.4 1.4-5.9 5.9-5.9-5.9 1.4-1.4L11 13V3Zm-6 16h14v-4h2v6H3v-6h2v4Z"/></svg>
+                  <span data-i18n="exportCsv">Export CSV</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="transaction-stats" id="transaction-stats"></div>
+
+            <div class="table-scroll">
+              <table class="data-table transaction-table">
+                <thead>
+                  <tr>
+                    <th data-i18n="date">Date</th>
+                    <th data-i18n="item">Item</th>
+                    <th data-i18n="category">Category</th>
+                    <th data-i18n="group">Group</th>
+                    <th data-i18n="payment">Payment</th>
+                    <th class="align-right" data-i18n="amount">Amount</th>
+                    <th class="align-right" data-i18n="actions">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="transaction-table-body"></tbody>
+              </table>
+            </div>
+          </article>
+        </section>
+
+        <section class="view" id="view-summary" data-view-panel="summary" aria-labelledby="view-title">
+          <div class="summary-toolbar">
+            <div>
+              <p class="section-kicker">ANNUAL VIEW</p>
+              <h2 data-i18n="summaryTitle">Monthly summary</h2>
+            </div>
+            <label class="year-control" for="summary-year-input">
+              <span data-i18n="selectedYear">Year</span>
+              <input id="summary-year-input" type="number" min="2000" max="2100" step="1">
+            </label>
+          </div>
+
+          <div class="kpi-grid summary-kpis">
+            <article class="mini-kpi"><span data-i18n="annualIncome">Annual income</span><strong id="annual-income">0</strong></article>
+            <article class="mini-kpi"><span data-i18n="annualSavings">Annual savings</span><strong id="annual-savings">0</strong></article>
+            <article class="mini-kpi"><span data-i18n="annualSavingsRate">Savings rate</span><strong id="annual-savings-rate">0%</strong></article>
+            <article class="mini-kpi"><span data-i18n="annualRemaining">Annual remaining</span><strong id="annual-remaining">0</strong></article>
+          </div>
+
+          <article class="panel trend-panel">
+            <div class="panel-heading compact">
+              <div>
+                <p class="section-kicker">TREND</p>
+                <h2 data-i18n="monthlySavingsTrend">Monthly savings rate</h2>
+              </div>
+            </div>
+            <div class="trend-chart" id="savings-trend-chart" role="img" aria-label="Monthly savings rate chart"></div>
+          </article>
+
+          <article class="panel">
+            <div class="table-scroll">
+              <table class="data-table summary-table">
+                <thead>
+                  <tr>
+                    <th data-i18n="month">Month</th>
+                    <th class="align-right" data-i18n="incomeShort">Income</th>
+                    <th class="align-right" data-i18n="needsShort">Needs</th>
+                    <th class="align-right" data-i18n="wantsShort">Wants</th>
+                    <th class="align-right" data-i18n="savingsShort">Savings</th>
+                    <th class="align-right" data-i18n="remainingShort">Remaining</th>
+                    <th class="align-right" data-i18n="savingsRate">Savings rate</th>
+                    <th data-i18n="status">Status</th>
+                  </tr>
+                </thead>
+                <tbody id="summary-table-body"></tbody>
+                <tfoot id="summary-table-foot"></tfoot>
+              </table>
+            </div>
+          </article>
+        </section>
+
+        <section class="view" id="view-settings" data-view-panel="settings" aria-labelledby="view-title">
+          <div class="settings-grid">
+            <article class="panel">
+              <div class="panel-heading compact">
+                <div>
+                  <p class="section-kicker">RULE</p>
+                  <h2 data-i18n="allocationSettings">Allocation settings</h2>
+                </div>
+                <span class="ratio-total" id="ratio-total">100%</span>
+              </div>
+              <form id="ratio-form" class="ratio-form">
+                <label class="ratio-field ratio-needs">
+                  <span data-i18n="needs">Needs</span>
+                  <div><input id="ratio-needs" type="number" min="0" max="100" step="1" required><b>%</b></div>
+                  <small data-i18n="needsGuidance"></small>
+                </label>
+                <label class="ratio-field ratio-wants">
+                  <span data-i18n="wants">Wants</span>
+                  <div><input id="ratio-wants" type="number" min="0" max="100" step="1" required><b>%</b></div>
+                  <small data-i18n="wantsGuidance"></small>
+                </label>
+                <label class="ratio-field ratio-savings">
+                  <span data-i18n="savings">Savings</span>
+                  <div><input id="ratio-savings" type="number" min="0" max="100" step="1" required><b>%</b></div>
+                  <small data-i18n="savingsGuidance"></small>
+                </label>
+                <p class="form-message" id="ratio-message"></p>
+                <button class="button button-primary" type="submit" data-i18n="saveRatios">Save ratios</button>
+              </form>
+            </article>
+
+            <article class="panel">
+              <div class="panel-heading compact">
+                <div>
+                  <p class="section-kicker">CLASSIFICATION</p>
+                  <h2 data-i18n="categorySettings">Categories</h2>
+                </div>
+              </div>
+              <form id="category-form" class="inline-form">
+                <input id="new-category-name" type="text" maxlength="60" placeholder="Category name" required>
+                <select id="new-category-group" required>
+                  <option value="income">Income</option>
+                  <option value="needs">Needs</option>
+                  <option value="wants">Wants</option>
+                  <option value="savings">Savings</option>
+                </select>
+                <button class="button button-secondary" type="submit" data-i18n="addCategory">Add category</button>
+              </form>
+              <div class="category-list" id="category-list"></div>
+            </article>
+
+            <article class="panel">
+              <div class="panel-heading compact">
+                <div>
+                  <p class="section-kicker">PAYMENT</p>
+                  <h2 data-i18n="paymentSettings">Payment methods</h2>
+                </div>
+              </div>
+              <form id="payment-form" class="inline-form payment-form">
+                <input id="new-payment-name" type="text" maxlength="60" placeholder="Payment method or account" required>
+                <button class="button button-secondary" type="submit" data-i18n="addPayment">Add payment method</button>
+              </form>
+              <div class="chip-list" id="payment-list"></div>
+            </article>
+
+            <article class="panel data-panel">
+              <div class="panel-heading compact">
+                <div>
+                  <p class="section-kicker">BACKUP</p>
+                  <h2 data-i18n="dataManagement">Data management</h2>
+                </div>
+              </div>
+              <p class="muted" data-i18n="localStorageNote"></p>
+              <div class="data-actions">
+                <button class="button button-secondary" id="backup-json-button" type="button" data-i18n="backupJson">Backup JSON</button>
+                <button class="button button-secondary" id="restore-json-button" type="button" data-i18n="restoreJson">Restore JSON</button>
+                <button class="button button-secondary" id="settings-export-csv-button" type="button" data-i18n="exportCsv">Export CSV</button>
+                <button class="button button-warning" id="reset-sample-button" type="button" data-i18n="resetSample">Restore sample</button>
+                <button class="button button-danger" id="clear-transactions-button" type="button" data-i18n="clearTransactions">Clear transactions</button>
+              </div>
+              <input id="restore-json-input" type="file" accept="application/json,.json" hidden>
+            </article>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <dialog class="transaction-dialog" id="transaction-dialog">
+    <form id="transaction-form" novalidate>
+      <div class="dialog-heading">
+        <div>
+          <p class="section-kicker">CASH FLOW</p>
+          <h2 id="transaction-dialog-title" data-i18n="addTransaction">Add transaction</h2>
+        </div>
+        <button class="icon-button" id="dialog-close-button" type="button" aria-label="Close">&times;</button>
+      </div>
+
+      <div class="form-grid">
+        <label>
+          <span data-i18n="date">Date</span>
+          <input id="transaction-date" type="date" required>
+        </label>
+        <label>
+          <span data-i18n="group">Group</span>
+          <select id="transaction-group" required>
+            <option value="income">Income</option>
+            <option value="needs">Needs</option>
+            <option value="wants">Wants</option>
+            <option value="savings">Savings</option>
+          </select>
+        </label>
+        <label class="span-2">
+          <span data-i18n="item">Item</span>
+          <input id="transaction-description" type="text" maxlength="100" placeholder="Description">
+        </label>
+        <label>
+          <span data-i18n="category">Category</span>
+          <select id="transaction-category" required></select>
+        </label>
+        <label>
+          <span data-i18n="amount">Amount</span>
+          <input id="transaction-amount" type="number" min="0.01" step="0.01" inputmode="decimal" required>
+        </label>
+        <label>
+          <span data-i18n="payment">Payment</span>
+          <select id="transaction-payment"></select>
+        </label>
+        <label>
+          <span data-i18n="note">Note</span>
+          <input id="transaction-note" type="text" maxlength="150">
+        </label>
+      </div>
+
+      <p class="form-message" id="transaction-form-message"></p>
+      <div class="dialog-actions">
+        <button class="button button-secondary" id="dialog-cancel-button" type="button" data-i18n="cancel">Cancel</button>
+        <button class="button button-primary" type="submit" data-i18n="save">Save</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="./assets/js/seed.js"></script>
+  <script src="./assets/js/app.js"></script>
+</body>
+</html>
