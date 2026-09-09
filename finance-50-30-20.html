@@ -1,0 +1,4375 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0f172a">
+  <meta name="description" content="Dashboard บริหารเงินตามสูตร 50/30/20 คำนวณงบอัตโนมัติจากเงินเดือน ใช้งานได้ทั้งคอมพิวเตอร์และโทรศัพท์">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>50/30/20 Finance Dashboard | Salary Planner</title>
+  <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+CiAgPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTYiIGZpbGw9IiMwZjE3MmEiLz4KICA8cGF0aCBkPSJNMzIgMTBhMjIgMjIgMCAwIDEgMjIgMjJIMzJWMTBaIiBmaWxsPSIjMjU2M2ViIi8+CiAgPHBhdGggZD0iTTU0IDMyYTIyIDIyIDAgMCAxLTE1LjIgMjAuOUwzMiAzMmgyMloiIGZpbGw9IiNmNTllMGIiLz4KICA8cGF0aCBkPSJNMzguOCA1Mi45QTIyIDIyIDAgMSAxIDMyIDEwdjIybDYuOCAyMC45WiIgZmlsbD0iIzBmNzY2ZSIvPgogIDxjaXJjbGUgY3g9IjMyIiBjeT0iMzIiIHI9IjExIiBmaWxsPSIjZmZmZmZmIi8+CiAgPHRleHQgeD0iMzIiIHk9IjM2IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzBmMTcyYSI+NTA8L3RleHQ+Cjwvc3ZnPgo=" type="image/svg+xml">
+  <style>
+:root {
+  --bg: #f3f6fb;
+  --surface: #ffffff;
+  --surface-soft: #f8fafc;
+  --surface-strong: #eef2f7;
+  --ink: #0f172a;
+  --muted: #64748b;
+  --muted-2: #94a3b8;
+  --line: #e2e8f0;
+  --navy: #0f172a;
+  --navy-2: #172033;
+  --primary: #2563eb;
+  --primary-soft: #dbeafe;
+  --needs: #2563eb;
+  --needs-soft: #dbeafe;
+  --wants: #f59e0b;
+  --wants-soft: #fef3c7;
+  --savings: #0f766e;
+  --savings-soft: #ccfbf1;
+  --income: #0369a1;
+  --income-soft: #e0f2fe;
+  --remaining: #7c3aed;
+  --remaining-soft: #ede9fe;
+  --danger: #dc2626;
+  --danger-soft: #fee2e2;
+  --warning: #b45309;
+  --warning-soft: #ffedd5;
+  --success: #15803d;
+  --success-soft: #dcfce7;
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04), 0 4px 14px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 18px 50px rgba(15, 23, 42, 0.10);
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 22px;
+  --sidebar-width: 254px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: Inter, "Noto Sans Thai", "Segoe UI", Tahoma, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 90% 0%, rgba(37, 99, 235, 0.08), transparent 28rem),
+    var(--bg);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button,
+select {
+  cursor: pointer;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.22);
+  outline-offset: 2px;
+}
+
+svg {
+  display: block;
+}
+
+.noscript {
+  padding: 1rem;
+  background: var(--danger-soft);
+  color: var(--danger);
+  text-align: center;
+  font-weight: 700;
+}
+
+.app-shell {
+  min-height: 100vh;
+}
+
+.sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  z-index: 20;
+  display: flex;
+  width: var(--sidebar-width);
+  flex-direction: column;
+  padding: 26px 18px 20px;
+  overflow-y: auto;
+  color: #ffffff;
+  background:
+    radial-gradient(circle at 20% 10%, rgba(59, 130, 246, 0.22), transparent 13rem),
+    linear-gradient(180deg, var(--navy-2), var(--navy));
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 0 8px 28px;
+}
+
+.brand-mark {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  width: 57px;
+  height: 42px;
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+}
+
+.brand-mark span {
+  display: grid;
+  place-items: center;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.brand-mark span:nth-child(1) {
+  background: var(--needs);
+}
+
+.brand-mark span:nth-child(2) {
+  background: var(--wants);
+}
+
+.brand-mark span:nth-child(3) {
+  background: var(--savings);
+}
+
+.brand strong {
+  display: block;
+  font-size: 17px;
+  letter-spacing: -0.02em;
+}
+
+.brand small {
+  display: block;
+  margin-top: 1px;
+  color: #94a3b8;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+}
+
+.main-nav {
+  display: grid;
+  gap: 7px;
+}
+
+.nav-button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 48px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 13px;
+  color: #aebbd0;
+  background: transparent;
+  text-align: left;
+  text-decoration: none;
+  transition: 160ms ease;
+}
+
+.nav-button svg {
+  width: 19px;
+  height: 19px;
+  flex: 0 0 auto;
+  fill: currentColor;
+}
+
+.nav-button:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.nav-button.is-active {
+  color: #ffffff;
+  background: rgba(37, 99, 235, 0.95);
+  box-shadow: 0 10px 24px rgba(37, 99, 235, 0.28);
+}
+
+.sidebar-note {
+  margin-top: auto;
+  padding: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.sidebar-note p {
+  margin: 8px 0 0;
+  color: #9eabc0;
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+.privacy-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 0 5px rgba(34, 197, 94, 0.12);
+}
+
+.app-main {
+  min-height: 100vh;
+  margin-left: var(--sidebar-width);
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  min-height: 108px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 20px 34px;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.9);
+  background: rgba(243, 246, 251, 0.88);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+}
+
+.topbar-copy {
+  min-width: 0;
+}
+
+.eyebrow,
+.section-kicker {
+  margin: 0 0 4px;
+  color: var(--primary);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.topbar h1 {
+  margin: 0;
+  font-size: clamp(24px, 3vw, 34px);
+  line-height: 1.15;
+  letter-spacing: -0.035em;
+}
+
+.topbar-copy > p:last-child {
+  margin: 5px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.topbar-tools {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.month-control,
+.year-control {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 174px;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.month-control span,
+.year-control span {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.month-control input,
+.year-control input {
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  color: var(--ink);
+  background: transparent;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.content-wrap {
+  width: min(100%, 1600px);
+  margin: 0 auto;
+  padding: 30px 34px 46px;
+}
+
+.view {
+  display: none;
+}
+
+.view.is-active {
+  display: block;
+  animation: view-in 180ms ease-out;
+}
+
+@keyframes view-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.button {
+  display: inline-flex;
+  min-height: 43px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 15px;
+  border: 1px solid transparent;
+  border-radius: 11px;
+  font-size: 13px;
+  font-weight: 750;
+  white-space: nowrap;
+  transition: 150ms ease;
+}
+
+.button svg {
+  width: 17px;
+  height: 17px;
+  fill: currentColor;
+}
+
+.button:hover {
+  transform: translateY(-1px);
+}
+
+.button-primary {
+  color: #ffffff;
+  background: var(--primary);
+  box-shadow: 0 9px 22px rgba(37, 99, 235, 0.22);
+}
+
+.button-primary:hover {
+  background: #1d4ed8;
+}
+
+.button-secondary {
+  border-color: var(--line);
+  color: #334155;
+  background: var(--surface);
+}
+
+.button-secondary:hover {
+  border-color: #cbd5e1;
+  background: #f8fafc;
+}
+
+.button-warning {
+  border-color: #fed7aa;
+  color: var(--warning);
+  background: var(--warning-soft);
+}
+
+.button-danger {
+  border-color: #fecaca;
+  color: var(--danger);
+  background: var(--danger-soft);
+}
+
+.text-button {
+  padding: 6px 0;
+  border: 0;
+  color: var(--primary);
+  background: transparent;
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.icon-button {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  color: #475569;
+  background: var(--surface);
+  font-size: 25px;
+  line-height: 1;
+}
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.kpi-card {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  min-height: 142px;
+  align-items: flex-start;
+  gap: 15px;
+  padding: 22px;
+  overflow: hidden;
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.kpi-card::after {
+  position: absolute;
+  inset: auto -28px -42px auto;
+  width: 116px;
+  height: 116px;
+  border-radius: 50%;
+  content: "";
+  opacity: 0.6;
+}
+
+.kpi-income::after {
+  background: var(--income-soft);
+}
+
+.kpi-expense::after {
+  background: var(--wants-soft);
+}
+
+.kpi-savings::after {
+  background: var(--savings-soft);
+}
+
+.kpi-remaining::after {
+  background: var(--remaining-soft);
+}
+
+.kpi-icon {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 13px;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+}
+
+.kpi-income .kpi-icon {
+  color: var(--income);
+  background: var(--income-soft);
+}
+
+.kpi-expense .kpi-icon {
+  color: var(--warning);
+  background: var(--wants-soft);
+}
+
+.kpi-savings .kpi-icon {
+  color: var(--savings);
+  background: var(--savings-soft);
+}
+
+.kpi-remaining .kpi-icon {
+  color: var(--remaining);
+  background: var(--remaining-soft);
+}
+
+.kpi-card > div:last-child {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+}
+
+.kpi-card p {
+  margin: 1px 0 8px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.kpi-card strong {
+  display: block;
+  overflow: hidden;
+  color: var(--ink);
+  font-size: clamp(22px, 2.4vw, 30px);
+  line-height: 1.1;
+  letter-spacing: -0.045em;
+  text-overflow: ellipsis;
+}
+
+.kpi-card small {
+  display: block;
+  margin-top: 8px;
+  overflow: hidden;
+  color: var(--muted-2);
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.kpi-content {
+  flex: 1 1 auto;
+}
+
+.kpi-quick-button {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  min-height: 30px;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  padding: 6px 10px;
+  border: 1px solid #bae6fd;
+  border-radius: 999px;
+  color: var(--income);
+  background: #f0f9ff;
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 850;
+  line-height: 1;
+  cursor: pointer;
+  transition: border-color 160ms ease, background 160ms ease, transform 160ms ease;
+}
+
+.kpi-quick-button svg {
+  width: 13px;
+  height: 13px;
+  flex: 0 0 auto;
+  fill: currentColor;
+}
+
+.kpi-quick-button:hover {
+  border-color: #7dd3fc;
+  background: #e0f2fe;
+  transform: translateY(-1px);
+}
+
+.kpi-quick-button:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.2);
+  outline-offset: 2px;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.75fr) minmax(300px, 0.85fr);
+  gap: 20px;
+}
+
+.panel {
+  min-width: 0;
+  padding: 24px;
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.panel-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 19px;
+}
+
+.panel-heading.compact {
+  margin-bottom: 15px;
+}
+
+.panel-heading h2,
+.summary-toolbar h2,
+.dialog-heading h2 {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.3;
+  letter-spacing: -0.025em;
+}
+
+.panel-heading .muted {
+  max-width: 680px;
+}
+
+.month-chip {
+  display: inline-flex;
+  min-height: 31px;
+  align-items: center;
+  padding: 0 11px;
+  border-radius: 999px;
+  color: var(--primary);
+  background: var(--primary-soft);
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.table-scroll {
+  width: 100%;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.data-table th {
+  padding: 12px 12px;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+  background: var(--surface-soft);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.data-table th:first-child {
+  border-radius: 10px 0 0 10px;
+}
+
+.data-table th:last-child {
+  border-radius: 0 10px 10px 0;
+}
+
+.data-table td {
+  padding: 14px 12px;
+  border-bottom: 1px solid #edf1f5;
+  color: #334155;
+  vertical-align: middle;
+}
+
+.data-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.data-table tbody tr:hover td {
+  background: #fbfdff;
+}
+
+.data-table .align-right,
+.align-right {
+  text-align: right;
+}
+
+.budget-table {
+  min-width: 790px;
+}
+
+.budget-group {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--ink);
+  font-weight: 750;
+}
+
+.group-dot {
+  width: 9px;
+  height: 9px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+}
+
+.group-dot.needs {
+  background: var(--needs);
+}
+
+.group-dot.wants {
+  background: var(--wants);
+}
+
+.group-dot.savings {
+  background: var(--savings);
+}
+
+.inline-meter {
+  min-width: 110px;
+}
+
+.inline-meter-track {
+  height: 6px;
+  margin-top: 6px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--surface-strong);
+}
+
+.inline-meter-fill {
+  height: 100%;
+  border-radius: inherit;
+  transition: width 300ms ease;
+}
+
+.inline-meter-fill.needs {
+  background: var(--needs);
+}
+
+.inline-meter-fill.wants {
+  background: var(--wants);
+}
+
+.inline-meter-fill.savings {
+  background: var(--savings);
+}
+
+.inline-meter-fill.over {
+  background: var(--danger);
+}
+
+.status-badge,
+.group-badge {
+  display: inline-flex;
+  min-height: 27px;
+  align-items: center;
+  padding: 0 9px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.status-good {
+  color: var(--success);
+  background: var(--success-soft);
+}
+
+.status-warning {
+  color: var(--warning);
+  background: var(--warning-soft);
+}
+
+.status-danger {
+  color: var(--danger);
+  background: var(--danger-soft);
+}
+
+.status-neutral {
+  color: #475569;
+  background: #e2e8f0;
+}
+
+.group-badge.income {
+  color: var(--income);
+  background: var(--income-soft);
+}
+
+.group-badge.needs {
+  color: #1d4ed8;
+  background: var(--needs-soft);
+}
+
+.group-badge.wants {
+  color: var(--warning);
+  background: var(--wants-soft);
+}
+
+.group-badge.savings {
+  color: var(--savings);
+  background: var(--savings-soft);
+}
+
+.amount-income {
+  color: var(--success);
+  font-weight: 800;
+}
+
+.amount-outflow {
+  color: #334155;
+  font-weight: 750;
+}
+
+.allocation-panel {
+  min-height: 370px;
+}
+
+.donut-wrap {
+  display: grid;
+  place-items: center;
+  gap: 22px;
+  padding: 7px 0 2px;
+}
+
+.donut {
+  position: relative;
+  display: grid;
+  width: 205px;
+  height: 205px;
+  place-items: center;
+  border-radius: 50%;
+  background: conic-gradient(#e2e8f0 0 100%);
+  box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.03);
+}
+
+.donut::after {
+  position: absolute;
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  background: var(--surface);
+  box-shadow: 0 0 0 1px rgba(226, 232, 240, 0.7);
+  content: "";
+}
+
+.donut-center {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  text-align: center;
+}
+
+.donut-center strong {
+  font-size: 27px;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.donut-center span {
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.legend {
+  display: grid;
+  width: 100%;
+  gap: 9px;
+}
+
+.legend-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 9px;
+  color: #475569;
+  font-size: 12px;
+}
+
+.legend-row i {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+}
+
+.legend-row strong {
+  color: var(--ink);
+  font-size: 12px;
+}
+
+.comparison-panel {
+  min-height: 305px;
+}
+
+.chart-key {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.chart-key span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.chart-key i {
+  width: 10px;
+  height: 5px;
+  border-radius: 999px;
+}
+
+.key-target {
+  background: #cbd5e1;
+}
+
+.key-actual {
+  background: var(--primary);
+}
+
+.bar-chart {
+  display: grid;
+  gap: 18px;
+  padding-top: 6px;
+}
+
+.bar-group {
+  display: grid;
+  grid-template-columns: minmax(110px, 0.8fr) minmax(190px, 2fr) auto;
+  align-items: center;
+  gap: 14px;
+}
+
+.bar-label {
+  overflow: hidden;
+  color: #334155;
+  font-size: 11px;
+  font-weight: 750;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bar-pair {
+  display: grid;
+  gap: 5px;
+}
+
+.bar-track {
+  height: 8px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #eef2f7;
+}
+
+.bar-fill {
+  height: 100%;
+  min-width: 2px;
+  border-radius: inherit;
+  transition: width 300ms ease;
+}
+
+.bar-fill.target {
+  background: #cbd5e1;
+}
+
+.bar-fill.actual.needs {
+  background: var(--needs);
+}
+
+.bar-fill.actual.wants {
+  background: var(--wants);
+}
+
+.bar-fill.actual.savings {
+  background: var(--savings);
+}
+
+.bar-value {
+  color: var(--ink);
+  font-size: 11px;
+  font-weight: 750;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.advice-panel {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  background:
+    radial-gradient(circle at 100% 0, rgba(20, 184, 166, 0.11), transparent 17rem),
+    linear-gradient(135deg, #ffffff, #f0fdfa);
+}
+
+.advice-icon {
+  display: grid;
+  width: 46px;
+  height: 46px;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 14px;
+  color: var(--savings);
+  background: var(--savings-soft);
+}
+
+.advice-icon svg {
+  width: 23px;
+  height: 23px;
+  fill: currentColor;
+}
+
+.advice-panel h2 {
+  margin: 1px 0 8px;
+  font-size: 17px;
+}
+
+.advice-panel p:last-child {
+  margin: 0;
+  color: #475569;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.recent-panel {
+  margin-top: 20px;
+}
+
+.muted {
+  margin: 5px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.transaction-heading {
+  align-items: center;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 9px;
+}
+
+.search-field {
+  position: relative;
+  width: min(250px, 30vw);
+}
+
+.search-field svg {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  width: 16px;
+  height: 16px;
+  fill: var(--muted-2);
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.search-field input,
+.toolbar select,
+.inline-form input,
+.inline-form select,
+.form-grid input,
+.form-grid select {
+  width: 100%;
+  height: 43px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  color: var(--ink);
+  background: var(--surface);
+}
+
+.search-field input {
+  padding: 0 12px 0 38px;
+}
+
+.toolbar select {
+  min-width: 150px;
+  padding: 0 34px 0 12px;
+}
+
+.transaction-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: -2px 0 17px;
+}
+
+.stat-pill {
+  display: inline-flex;
+  min-height: 31px;
+  align-items: center;
+  gap: 6px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--muted);
+  background: var(--surface-soft);
+  font-size: 10px;
+  font-weight: 750;
+}
+
+.stat-pill strong {
+  color: var(--ink);
+}
+
+.transaction-table {
+  min-width: 880px;
+}
+
+.row-actions {
+  display: inline-flex;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.row-action {
+  display: grid;
+  width: 31px;
+  height: 31px;
+  place-items: center;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: #475569;
+  background: #ffffff;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.row-action:hover {
+  color: var(--primary);
+  border-color: #bfdbfe;
+  background: var(--primary-soft);
+}
+
+.row-action.delete:hover {
+  color: var(--danger);
+  border-color: #fecaca;
+  background: var(--danger-soft);
+}
+
+.empty-row td {
+  padding: 40px 18px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.summary-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 17px;
+}
+
+.year-control {
+  min-width: 130px;
+}
+
+.summary-kpis {
+  margin-bottom: 20px;
+}
+
+.mini-kpi {
+  display: grid;
+  min-height: 105px;
+  align-content: center;
+  gap: 8px;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.mini-kpi span {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.mini-kpi strong {
+  font-size: 22px;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+}
+
+.trend-panel {
+  margin-bottom: 20px;
+}
+
+.trend-chart {
+  min-height: 250px;
+  overflow-x: auto;
+}
+
+.trend-chart svg {
+  width: 100%;
+  min-width: 700px;
+  height: 250px;
+}
+
+.trend-grid-line {
+  stroke: #e2e8f0;
+  stroke-width: 1;
+  stroke-dasharray: 4 5;
+}
+
+.trend-axis-label {
+  fill: #94a3b8;
+  font-family: inherit;
+  font-size: 10px;
+}
+
+.trend-line {
+  fill: none;
+  stroke: var(--savings);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.trend-area {
+  fill: rgba(15, 118, 110, 0.08);
+}
+
+.trend-dot {
+  fill: #ffffff;
+  stroke: var(--savings);
+  stroke-width: 3;
+}
+
+.summary-table {
+  min-width: 850px;
+}
+
+.summary-table tfoot td {
+  padding: 14px 12px;
+  border-top: 2px solid var(--line);
+  color: var(--ink);
+  background: var(--surface-soft);
+  font-weight: 800;
+}
+
+.settings-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.ratio-form {
+  display: grid;
+  gap: 13px;
+}
+
+.ratio-field {
+  display: grid;
+  grid-template-columns: minmax(120px, 0.8fr) 100px minmax(170px, 1.4fr);
+  align-items: center;
+  gap: 13px;
+  padding: 13px 14px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: var(--surface-soft);
+}
+
+.ratio-field > span {
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.ratio-field > div {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #ffffff;
+}
+
+.ratio-field input {
+  width: 100%;
+  min-width: 0;
+  height: 39px;
+  padding: 0 4px 0 10px;
+  border: 0;
+  background: transparent;
+  text-align: right;
+  font-weight: 800;
+}
+
+.ratio-field b {
+  padding-right: 10px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.ratio-field small {
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+.ratio-total {
+  display: inline-flex;
+  min-height: 34px;
+  align-items: center;
+  padding: 0 11px;
+  border-radius: 999px;
+  color: var(--success);
+  background: var(--success-soft);
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.ratio-total.invalid {
+  color: var(--danger);
+  background: var(--danger-soft);
+}
+
+.form-message {
+  min-height: 20px;
+  margin: 0;
+  color: var(--danger);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.inline-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(130px, 0.7fr) auto;
+  gap: 8px;
+  margin-bottom: 15px;
+}
+
+.inline-form input,
+.inline-form select {
+  padding: 0 11px;
+}
+
+.payment-form {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.category-list {
+  display: grid;
+  max-height: 430px;
+  gap: 7px;
+  overflow-y: auto;
+  padding-right: 3px;
+}
+
+.category-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 7px 8px 7px 12px;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  background: var(--surface-soft);
+}
+
+.category-row strong {
+  overflow: hidden;
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  display: inline-flex;
+  min-height: 34px;
+  align-items: center;
+  gap: 8px;
+  padding: 0 7px 0 11px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: #334155;
+  background: var(--surface-soft);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.chip button {
+  display: grid;
+  width: 23px;
+  height: 23px;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  color: var(--muted);
+  background: #ffffff;
+  line-height: 1;
+}
+
+.data-panel {
+  background:
+    radial-gradient(circle at 100% 0, rgba(37, 99, 235, 0.07), transparent 16rem),
+    var(--surface);
+}
+
+.data-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 17px;
+}
+
+.transaction-dialog {
+  width: min(680px, calc(100vw - 28px));
+  padding: 0;
+  border: 0;
+  border-radius: 22px;
+  color: var(--ink);
+  background: var(--surface);
+  box-shadow: var(--shadow-md);
+}
+
+.transaction-dialog::backdrop {
+  background: rgba(15, 23, 42, 0.58);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}
+
+.transaction-dialog form {
+  padding: 25px;
+}
+
+.dialog-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 15px;
+}
+
+.form-grid label {
+  display: grid;
+  gap: 6px;
+}
+
+.form-grid label > span {
+  color: #475569;
+  font-size: 11px;
+  font-weight: 750;
+}
+
+.form-grid input,
+.form-grid select {
+  padding: 0 11px;
+}
+
+.form-grid .span-2 {
+  grid-column: span 2;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 9px;
+  margin-top: 5px;
+}
+
+.toast {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 100;
+  max-width: min(390px, calc(100vw - 40px));
+  padding: 12px 15px;
+  border-radius: 12px;
+  color: #ffffff;
+  background: var(--navy);
+  box-shadow: var(--shadow-md);
+  font-size: 12px;
+  font-weight: 700;
+  opacity: 0;
+  transform: translateY(14px);
+  pointer-events: none;
+  transition: 180ms ease;
+}
+
+.toast.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.toast.is-error {
+  background: #991b1b;
+}
+
+.negative {
+  color: var(--danger) !important;
+}
+
+.positive {
+  color: var(--success) !important;
+}
+
+
+.salary-plan {
+  margin-bottom: 20px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 100% 0, rgba(37, 99, 235, 0.12), transparent 24rem),
+    linear-gradient(135deg, #ffffff 0%, #f8fbff 58%, #f0f9ff 100%);
+}
+
+.salary-plan.is-empty {
+  border-style: dashed;
+}
+
+.salary-plan-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.salary-plan-title-wrap h2 {
+  margin: 0;
+  font-size: 19px;
+  line-height: 1.3;
+  letter-spacing: -0.025em;
+}
+
+.salary-plan-caption,
+.salary-plan-note,
+.budget-basis {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.salary-plan-base-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.salary-base-badge {
+  min-width: 150px;
+  padding: 10px 13px;
+  border: 1px solid #bfdbfe;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.82);
+  text-align: right;
+}
+
+.salary-base-badge span {
+  display: block;
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.salary-base-badge strong {
+  display: block;
+  margin-top: 3px;
+  color: var(--ink);
+  font-size: 19px;
+  line-height: 1.2;
+}
+
+.salary-plan-button {
+  min-height: 43px;
+  white-space: nowrap;
+}
+
+.salary-plan-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.salary-plan-item {
+  position: relative;
+  min-width: 0;
+  padding: 16px 16px 14px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.86);
+}
+
+.salary-plan-item::before {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 4px;
+  content: "";
+}
+
+.salary-plan-item.needs::before { background: var(--needs); }
+.salary-plan-item.wants::before { background: var(--wants); }
+.salary-plan-item.savings::before { background: var(--savings); }
+
+.salary-plan-item-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.salary-plan-item-top span:first-child {
+  min-width: 0;
+  overflow: hidden;
+  color: #334155;
+  font-size: 11px;
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.salary-plan-ratio {
+  display: inline-flex;
+  min-height: 26px;
+  align-items: center;
+  padding: 0 8px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.salary-plan-item.needs .salary-plan-ratio { color: #1d4ed8; background: var(--needs-soft); }
+.salary-plan-item.wants .salary-plan-ratio { color: #b45309; background: var(--wants-soft); }
+.salary-plan-item.savings .salary-plan-ratio { color: var(--savings); background: var(--savings-soft); }
+
+.salary-plan-item strong {
+  display: block;
+  margin-top: 12px;
+  color: var(--ink);
+  font-size: clamp(20px, 2.2vw, 27px);
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+}
+
+.salary-plan-item small {
+  display: block;
+  margin-top: 6px;
+  color: var(--muted-2);
+  font-size: 10px;
+}
+
+.salary-plan-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  margin-top: 13px;
+}
+
+.salary-plan-note::before {
+  flex: 0 0 auto;
+  content: "i";
+  display: inline-grid;
+  width: 16px;
+  height: 16px;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--primary);
+  background: var(--primary-soft);
+  font-size: 9px;
+  font-weight: 900;
+}
+
+.salary-live-preview {
+  margin: 17px 0 5px;
+  padding: 15px;
+  border: 1px solid #bfdbfe;
+  border-radius: 15px;
+  background: #f8fbff;
+}
+
+.salary-live-preview[hidden] {
+  display: none !important;
+}
+
+.salary-live-preview-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 11px;
+}
+
+.salary-live-preview-head strong {
+  font-size: 12px;
+}
+
+.salary-live-preview-head span {
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.salary-live-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.salary-live-item {
+  min-width: 0;
+  padding: 10px;
+  border-radius: 11px;
+  background: #ffffff;
+  box-shadow: inset 0 0 0 1px rgba(226, 232, 240, 0.95);
+}
+
+.salary-live-item span,
+.salary-live-item small {
+  display: block;
+  color: var(--muted);
+  font-size: 9px;
+  line-height: 1.3;
+}
+
+.salary-live-item strong {
+  display: block;
+  margin: 5px 0 3px;
+  overflow: hidden;
+  color: var(--ink);
+  font-size: 15px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 820px) {
+  .salary-plan-head {
+    flex-direction: column;
+  }
+
+  .salary-plan-base-wrap {
+    width: 100%;
+  }
+
+  .salary-base-badge {
+    flex: 1 1 auto;
+    text-align: left;
+  }
+}
+
+@media (max-width: 620px) {
+  .salary-plan {
+    padding: 18px;
+  }
+
+  .salary-plan-base-wrap {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .salary-plan-button {
+    width: 100%;
+  }
+
+  .salary-plan-grid {
+    grid-template-columns: 1fr;
+    gap: 9px;
+  }
+
+  .salary-plan-item {
+    padding: 14px;
+  }
+
+  .salary-plan-item strong {
+    font-size: 23px;
+  }
+
+  .salary-live-preview {
+    padding: 12px;
+  }
+
+  .salary-live-grid {
+    gap: 6px;
+  }
+
+  .salary-live-item {
+    padding: 8px 7px;
+  }
+
+  .salary-live-item strong {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 1240px) {
+  .topbar-tools .button-secondary span {
+    display: none;
+  }
+
+  .topbar-tools .button-secondary {
+    width: 43px;
+    padding: 0;
+  }
+
+  .kpi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .settings-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 1060px) {
+  :root {
+    --sidebar-width: 210px;
+  }
+
+  .sidebar {
+    padding-inline: 13px;
+  }
+
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .allocation-panel,
+  .comparison-panel {
+    min-height: auto;
+  }
+
+  .donut-wrap {
+    grid-template-columns: auto minmax(180px, 1fr);
+    justify-items: start;
+  }
+}
+
+@media (max-width: 820px) {
+  :root {
+    --sidebar-width: 0px;
+  }
+
+  .sidebar {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    height: auto;
+    min-height: 68px;
+    flex-direction: row;
+    align-items: center;
+    gap: 14px;
+    padding: 10px 13px;
+    overflow-x: auto;
+  }
+
+  .brand {
+    flex: 0 0 auto;
+    padding: 0 6px 0 0;
+  }
+
+  .brand-mark {
+    width: 48px;
+    height: 37px;
+  }
+
+  .brand > div:last-child {
+    display: none;
+  }
+
+  .main-nav {
+    display: flex;
+    flex: 0 0 auto;
+    gap: 5px;
+  }
+
+  .nav-button {
+    width: auto;
+    min-height: 44px;
+    padding: 0 12px;
+  }
+
+  .nav-button span {
+    display: none;
+  }
+
+  .sidebar-note {
+    display: none;
+  }
+
+  .app-main {
+    margin-left: 0;
+  }
+
+  .topbar {
+    position: relative;
+    min-height: auto;
+    align-items: flex-start;
+    padding: 20px 20px 15px;
+  }
+
+  .topbar-tools {
+    flex-wrap: wrap;
+  }
+
+  .month-control {
+    min-width: 150px;
+  }
+
+  .content-wrap {
+    padding: 20px 20px 38px;
+  }
+
+  .transaction-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .toolbar {
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .search-field {
+    width: min(100%, 330px);
+    flex: 1 1 220px;
+  }
+}
+
+@media (max-width: 620px) {
+  .sidebar {
+    justify-content: space-between;
+  }
+
+  .brand {
+    display: none;
+  }
+
+  .main-nav {
+    width: 100%;
+    justify-content: space-around;
+  }
+
+  .nav-button {
+    flex: 1 1 0;
+    justify-content: center;
+  }
+
+  .topbar {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .topbar-tools {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .month-control {
+    flex: 1 1 150px;
+  }
+
+  .topbar-tools .button-primary {
+    flex: 1 1 auto;
+  }
+
+  .content-wrap {
+    padding-inline: 13px;
+  }
+
+  .kpi-grid {
+    grid-template-columns: 1fr;
+    gap: 11px;
+  }
+
+  .kpi-card {
+    min-height: 132px;
+    padding: 18px;
+  }
+
+  .panel {
+    padding: 18px;
+    border-radius: 18px;
+  }
+
+  .panel-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 9px;
+  }
+
+  .donut-wrap {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+
+  .bar-group {
+    grid-template-columns: 100px minmax(150px, 1fr);
+  }
+
+  .bar-value {
+    grid-column: 2;
+  }
+
+  .summary-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .year-control {
+    width: 145px;
+  }
+
+  .ratio-field {
+    grid-template-columns: minmax(0, 1fr) 88px;
+  }
+
+  .ratio-field small {
+    grid-column: span 2;
+  }
+
+  .inline-form,
+  .payment-form {
+    grid-template-columns: 1fr;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-grid .span-2 {
+    grid-column: span 1;
+  }
+
+  .transaction-dialog form {
+    padding: 20px;
+  }
+}
+
+@media print {
+  :root {
+    --bg: #ffffff;
+  }
+
+  body {
+    background: #ffffff;
+  }
+
+  .sidebar,
+  .topbar-tools,
+  .kpi-quick-button,
+  .text-button,
+  .row-actions,
+  .toolbar,
+  .summary-toolbar,
+  #view-transactions,
+  #view-summary,
+  #view-settings,
+  .toast {
+    display: none !important;
+  }
+
+  .app-main {
+    margin: 0;
+  }
+
+  .topbar {
+    position: static;
+    padding: 10px 0 18px;
+    border: 0;
+    background: #ffffff;
+  }
+
+  .content-wrap {
+    width: 100%;
+    padding: 0;
+  }
+
+  .view,
+  #view-dashboard {
+    display: block !important;
+  }
+
+  .panel,
+  .kpi-card,
+  .mini-kpi {
+    break-inside: avoid;
+    box-shadow: none;
+  }
+
+  .recent-panel {
+    break-before: page;
+  }
+}
+
+@media (max-width: 620px) {
+  .recent-panel .data-table {
+    min-width: 640px;
+  }
+}
+
+/* Mobile-complete layout: turn wide tables into readable cards instead of clipping columns. */
+@media (max-width: 620px) {
+  html {
+    min-width: 0;
+  }
+
+  body {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  .sidebar {
+    min-height: 72px;
+    padding-top: max(8px, env(safe-area-inset-top, 0px));
+  }
+
+  .nav-button {
+    min-width: 0;
+    min-height: 52px;
+    flex-direction: column;
+    gap: 3px;
+    padding: 6px 3px;
+    border-radius: 12px;
+  }
+
+  .nav-button svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .nav-button span {
+    display: block;
+    max-width: 100%;
+    overflow: hidden;
+    font-size: 9px;
+    font-weight: 700;
+    line-height: 1.1;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .topbar-copy h1 {
+    font-size: clamp(24px, 7.2vw, 30px);
+    line-height: 1.08;
+  }
+
+  .topbar-tools .button-secondary {
+    flex: 0 0 43px;
+  }
+
+  .month-control input {
+    min-width: 0;
+  }
+
+  .table-scroll {
+    margin-inline: 0;
+  }
+
+  .budget-panel .table-scroll,
+  .recent-panel .table-scroll,
+  #view-transactions .table-scroll,
+  #view-summary .table-scroll {
+    overflow: visible;
+  }
+
+  .budget-table,
+  .recent-panel .data-table,
+  .transaction-table,
+  .summary-table {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    border: 0;
+  }
+
+  .budget-table thead,
+  .recent-panel .data-table thead,
+  .transaction-table thead,
+  .summary-table thead {
+    display: none;
+  }
+
+  .budget-table tbody,
+  .recent-panel .data-table tbody,
+  .transaction-table tbody,
+  .summary-table tbody,
+  .summary-table tfoot {
+    display: grid;
+    width: 100%;
+    gap: 10px;
+  }
+
+  .budget-table tbody tr,
+  .summary-table tbody tr,
+  .summary-table tfoot tr {
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 14px;
+    padding: 13px 14px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: var(--surface-soft);
+  }
+
+  .budget-table td,
+  .summary-table td {
+    display: block;
+    min-width: 0;
+    padding: 8px 0;
+    border: 0;
+    text-align: left !important;
+    white-space: normal;
+  }
+
+  .budget-table td::before,
+  .summary-table td::before,
+  .recent-panel .data-table td::before,
+  .transaction-table td::before {
+    display: block;
+    margin-bottom: 3px;
+    color: var(--muted-2);
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+    line-height: 1.25;
+    text-transform: uppercase;
+    content: attr(data-label);
+  }
+
+  .budget-table td:first-child,
+  .summary-table td:first-child {
+    grid-column: 1 / -1;
+    margin-bottom: 2px;
+    padding-top: 1px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .budget-table td:first-child::before,
+  .summary-table tfoot td:first-child::before {
+    display: none;
+  }
+
+  .budget-group {
+    font-size: 13px;
+  }
+
+  .budget-table .inline-meter {
+    min-width: 0;
+  }
+
+  .budget-table .inline-meter-track {
+    width: 100%;
+  }
+
+  .recent-panel .data-table tbody tr,
+  .transaction-table tbody tr {
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 12px;
+    padding: 13px 14px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: var(--surface-soft);
+  }
+
+  .recent-panel .data-table td,
+  .transaction-table td {
+    display: block;
+    min-width: 0;
+    padding: 7px 0;
+    border: 0;
+    text-align: left !important;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .recent-panel .data-table td:nth-child(2),
+  .transaction-table td:nth-child(2) {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    padding-top: 0;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--line);
+    font-size: 13px;
+  }
+
+  .recent-panel .data-table td:nth-child(2)::before,
+  .transaction-table td:nth-child(2)::before {
+    display: none;
+  }
+
+  .recent-panel .data-table td:last-child,
+  .transaction-table td:nth-child(6) {
+    font-size: 13px;
+    font-weight: 800;
+  }
+
+  .transaction-table td:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .transaction-table .row-actions {
+    justify-content: flex-start;
+  }
+
+  .summary-table tfoot {
+    margin-top: 12px;
+  }
+
+  .summary-table tfoot tr {
+    border-color: #bfdbfe;
+    background: var(--primary-soft);
+  }
+
+  .summary-table tfoot td:first-child {
+    font-weight: 850;
+  }
+
+  .empty-row {
+    display: block !important;
+    padding: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+  }
+
+  .empty-row td {
+    display: block !important;
+    padding: 30px 12px !important;
+    border: 1px dashed var(--line) !important;
+    border-radius: 14px;
+    text-align: center !important;
+  }
+
+  .empty-row td::before {
+    display: none !important;
+  }
+
+  .toolbar > * {
+    min-width: 0;
+  }
+
+  .toolbar select,
+  .toolbar .button {
+    flex: 1 1 140px;
+  }
+
+  .trend-chart {
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+  }
+
+  .trend-chart svg {
+    min-width: 680px;
+  }
+
+  .dialog-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+}
+</style>
+</head>
+<body>
+  <noscript>
+    <div class="noscript">This dashboard requires JavaScript.</div>
+  </noscript>
+
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Main navigation">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <span>50</span><span>30</span><span>20</span>
+        </div>
+        <div>
+          <strong>Money Flow</strong>
+          <small>50 / 30 / 20</small>
+        </div>
+      </div>
+
+      <nav class="main-nav">
+        <button class="nav-button is-active" type="button" data-view="dashboard">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13h6V4H4v9Zm0 7h6v-5H4v5Zm10 0h6v-9h-6v9Zm0-16v5h6V4h-6Z"/></svg>
+          <span data-i18n="dashboard">Dashboard</span>
+        </button>
+        <button class="nav-button" type="button" data-view="transactions">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Zm2 4v2h10V7H7Zm0 4v2h6v-2H7Zm0 4v2h8v-2H7Z"/></svg>
+          <span data-i18n="transactions">Transactions</span>
+        </button>
+        <button class="nav-button" type="button" data-view="summary">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19h16v2H2V3h2v16Zm4-2H6v-6h2v6Zm5 0h-2V6h2v11Zm5 0h-2V9h2v8Z"/></svg>
+          <span data-i18n="summary">Monthly summary</span>
+        </button>
+        <button class="nav-button" type="button" data-view="settings">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.14 12.94c.04-.31.06-.63.06-.94s-.02-.63-.07-.94l2.03-1.58-1.92-3.32-2.39.96a7.2 7.2 0 0 0-1.62-.94L14.87 3h-3.74l-.36 3.18c-.58.24-1.12.55-1.62.94l-2.39-.96-1.92 3.32 2.03 1.58c-.05.31-.07.64-.07.94 0 .31.02.63.07.94l-2.03 1.58 1.92 3.32 2.39-.96c.5.39 1.04.7 1.62.94l.36 3.18h3.74l.36-3.18c.58-.24 1.12-.55 1.62-.94l2.39.96 1.92-3.32-2.02-1.58ZM13 15.5A3.5 3.5 0 1 1 13 8a3.5 3.5 0 0 1 0 7.5Z"/></svg>
+          <span data-i18n="settings">Settings</span>
+        </button>
+        <a class="nav-button" href="index.html" title="กลับไปคำนวณเงินเดือน">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3Zm1 4v2h8V7H8Zm0 4v2h2v-2H8Zm6 0v2h2v-2h-2Zm-6 4v2h2v-2H8Zm6 0v2h2v-2h-2Z"/></svg>
+          <span>คำนวณเงินเดือน</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-note">
+        <span class="privacy-dot" aria-hidden="true"></span>
+        <p data-i18n="localStorageNote">Data is stored in this browser.</p>
+      </div>
+    </aside>
+
+    <main class="app-main">
+      <header class="topbar">
+        <div class="topbar-copy">
+          <p class="eyebrow">PERSONAL FINANCE</p>
+          <h1 id="view-title">Dashboard</h1>
+          <p id="view-subtitle">50/30/20 overview</p>
+        </div>
+
+        <div class="topbar-tools">
+          <label class="month-control" for="month-input">
+            <span data-i18n="selectedMonth">Month</span>
+            <input id="month-input" type="month" aria-label="Selected month">
+          </label>
+          <button class="button button-secondary" id="print-button" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9V2h12v7h1a3 3 0 0 1 3 3v6h-4v4H6v-4H2v-6a3 3 0 0 1 3-3h1Zm2-5v5h8V4H8Zm8 16v-5H8v5h8Zm2-5h2v-3a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v3h2v-2h12v2Z"/></svg>
+            <span data-i18n="printReport">Print</span>
+          </button>
+          <button class="button button-primary" id="add-transaction-button" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6V5Z"/></svg>
+            <span data-i18n="addTransaction">Add transaction</span>
+          </button>
+        </div>
+      </header>
+
+      <div class="content-wrap">
+        <section class="view is-active" id="view-dashboard" data-view-panel="dashboard" aria-labelledby="view-title">
+          <div class="kpi-grid">
+            <article class="kpi-card kpi-income">
+              <div class="kpi-icon" aria-hidden="true">IN</div>
+              <div class="kpi-content">
+                <p data-i18n="incomeTotal">Income</p>
+                <strong id="kpi-income">0</strong>
+                <small id="kpi-income-note">0 transactions</small>
+                <button class="kpi-quick-button" id="salary-quick-button" type="button">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 17.25V20h2.75L17.81 8.94l-2.75-2.75L4 17.25Zm15.71-10.04a1 1 0 0 0 0-1.42l-1.5-1.5a1 1 0 0 0-1.42 0l-1.17 1.17 2.75 2.75 1.34-1Z"/></svg>
+                  <span id="salary-quick-label" data-i18n="setSalary">Set salary</span>
+                </button>
+              </div>
+            </article>
+            <article class="kpi-card kpi-expense">
+              <div class="kpi-icon" aria-hidden="true">OUT</div>
+              <div>
+                <p data-i18n="expenseTotal">Expenses</p>
+                <strong id="kpi-expense">0</strong>
+                <small id="kpi-expense-note">Needs + wants</small>
+              </div>
+            </article>
+            <article class="kpi-card kpi-savings">
+              <div class="kpi-icon" aria-hidden="true">SAVE</div>
+              <div>
+                <p data-i18n="savingsTotal">Savings</p>
+                <strong id="kpi-savings">0</strong>
+                <small id="kpi-savings-note">0% of income</small>
+              </div>
+            </article>
+            <article class="kpi-card kpi-remaining">
+              <div class="kpi-icon" aria-hidden="true">BAL</div>
+              <div>
+                <p data-i18n="remaining">Remaining</p>
+                <strong id="kpi-remaining">0</strong>
+                <small id="kpi-remaining-note">After all allocations</small>
+              </div>
+            </article>
+          </div>
+
+          <article class="panel salary-plan" id="salary-plan-panel">
+            <div class="salary-plan-head">
+              <div class="salary-plan-title-wrap">
+                <p class="section-kicker">SALARY PLAN</p>
+                <h2>แบ่งเงินเดือนอัตโนมัติ</h2>
+                <p class="salary-plan-caption" id="salary-plan-caption">ระบบคำนวณงบเป้าหมายตามสัดส่วนจากเงินเดือนของเดือนที่เลือก</p>
+              </div>
+              <div class="salary-plan-base-wrap">
+                <div class="salary-base-badge">
+                  <span>ฐานเงินเดือน</span>
+                  <strong id="salary-base-amount">฿0</strong>
+                </div>
+                <button class="button button-secondary salary-plan-button" id="salary-plan-button" type="button">ใส่เงินเดือน</button>
+              </div>
+            </div>
+
+            <div class="salary-plan-grid">
+              <section class="salary-plan-item needs">
+                <div class="salary-plan-item-top">
+                  <span>ค่าใช้จ่ายจำเป็น</span>
+                  <span class="salary-plan-ratio" id="salary-plan-needs-ratio">50%</span>
+                </div>
+                <strong id="salary-plan-needs-amount">฿0</strong>
+                <small id="salary-plan-needs-formula">50% × เงินเดือน</small>
+              </section>
+              <section class="salary-plan-item wants">
+                <div class="salary-plan-item-top">
+                  <span>ความสุขส่วนตัว</span>
+                  <span class="salary-plan-ratio" id="salary-plan-wants-ratio">30%</span>
+                </div>
+                <strong id="salary-plan-wants-amount">฿0</strong>
+                <small id="salary-plan-wants-formula">30% × เงินเดือน</small>
+              </section>
+              <section class="salary-plan-item savings">
+                <div class="salary-plan-item-top">
+                  <span>การออมและการลงทุน</span>
+                  <span class="salary-plan-ratio" id="salary-plan-savings-ratio">20%</span>
+                </div>
+                <strong id="salary-plan-savings-amount">฿0</strong>
+                <small id="salary-plan-savings-formula">20% × เงินเดือน</small>
+              </section>
+            </div>
+            <p class="salary-plan-note" id="salary-plan-note">งบทั้ง 3 ส่วนเป็นเป้าหมายสำหรับวางแผน ไม่ใช่รายการใช้เงินจริง</p>
+          </article>
+
+          <div class="dashboard-grid">
+            <article class="panel budget-panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="section-kicker">50 / 30 / 20</p>
+                  <h2 data-i18n="budgetAllocation">Budget allocation</h2>
+                  <p class="budget-basis" id="budget-basis-label">คำนวณจากเงินเดือนของเดือนที่เลือก</p>
+                </div>
+                <span class="month-chip" id="dashboard-month-label"></span>
+              </div>
+              <div class="table-scroll">
+                <table class="data-table budget-table">
+                  <thead>
+                    <tr>
+                      <th data-i18n="group">Group</th>
+                      <th data-i18n="target">Target</th>
+                      <th data-i18n="targetBudget">Target budget</th>
+                      <th data-i18n="actual">Actual</th>
+                      <th data-i18n="percentIncome">% income</th>
+                      <th data-i18n="variance">Variance</th>
+                      <th data-i18n="status">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="budget-table-body"></tbody>
+                </table>
+              </div>
+            </article>
+
+            <article class="panel allocation-panel">
+              <div class="panel-heading compact">
+                <div>
+                  <p class="section-kicker">STRUCTURE</p>
+                  <h2 data-i18n="actualAllocation">Actual allocation</h2>
+                </div>
+              </div>
+              <div class="donut-wrap">
+                <div class="donut" id="allocation-donut" role="img" aria-label="Allocation chart">
+                  <div class="donut-center">
+                    <strong id="donut-percent">0%</strong>
+                    <span data-i18n="usedAllocated">Used</span>
+                  </div>
+                </div>
+                <div class="legend" id="allocation-legend"></div>
+              </div>
+            </article>
+
+            <article class="panel comparison-panel">
+              <div class="panel-heading compact">
+                <div>
+                  <p class="section-kicker">CONTROL</p>
+                  <h2 data-i18n="targetVsActual">Target vs actual</h2>
+                </div>
+                <div class="chart-key" aria-hidden="true">
+                  <span><i class="key-target"></i>Target</span>
+                  <span><i class="key-actual"></i>Actual</span>
+                </div>
+              </div>
+              <div class="bar-chart" id="comparison-chart"></div>
+            </article>
+
+            <article class="panel advice-panel">
+              <div class="advice-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M9 21h6v-1H9v1Zm3-20a7 7 0 0 0-4 12.74V17a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-3.26A7 7 0 0 0 12 1Zm2.85 11.1-.85.51V17h-4v-4.39l-.85-.51A5 5 0 1 1 14.85 12.1Z"/></svg>
+              </div>
+              <div>
+                <p class="section-kicker" data-i18n="automaticAdvice">Automatic advice</p>
+                <h2 id="advice-title">Financial guidance</h2>
+                <p id="advice-text"></p>
+              </div>
+            </article>
+          </div>
+
+          <article class="panel recent-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="section-kicker">LATEST</p>
+                <h2 data-i18n="recentTransactions">Recent transactions</h2>
+              </div>
+              <button class="text-button" type="button" data-go-view="transactions">View all</button>
+            </div>
+            <div class="table-scroll">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th data-i18n="date">Date</th>
+                    <th data-i18n="item">Item</th>
+                    <th data-i18n="category">Category</th>
+                    <th data-i18n="group">Group</th>
+                    <th class="align-right" data-i18n="amount">Amount</th>
+                  </tr>
+                </thead>
+                <tbody id="recent-table-body"></tbody>
+              </table>
+            </div>
+          </article>
+        </section>
+
+        <section class="view" id="view-transactions" data-view-panel="transactions" aria-labelledby="view-title">
+          <article class="panel">
+            <div class="panel-heading transaction-heading">
+              <div>
+                <p class="section-kicker">CASH FLOW</p>
+                <h2 data-i18n="transactionsTitle">Transactions</h2>
+                <p class="muted" data-i18n="transactionsHint"></p>
+              </div>
+              <div class="toolbar">
+                <div class="search-field">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21 19.6-4.35-4.35a7.5 7.5 0 1 0-1.4 1.4L19.6 21 21 19.6ZM5 11a6 6 0 1 1 12 0 6 6 0 0 1-12 0Z"/></svg>
+                  <input id="transaction-search" type="search" placeholder="Search" aria-label="Search transactions">
+                </div>
+                <select id="transaction-group-filter" aria-label="Filter group">
+                  <option value="all">All groups</option>
+                  <option value="income">Income</option>
+                  <option value="needs">Needs</option>
+                  <option value="wants">Wants</option>
+                  <option value="savings">Savings</option>
+                </select>
+                <button class="button button-secondary" id="export-csv-button" type="button">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 3h2v10l3.5-3.5 1.4 1.4-5.9 5.9-5.9-5.9 1.4-1.4L11 13V3Zm-6 16h14v-4h2v6H3v-6h2v4Z"/></svg>
+                  <span data-i18n="exportCsv">Export CSV</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="transaction-stats" id="transaction-stats"></div>
+
+            <div class="table-scroll">
+              <table class="data-table transaction-table">
+                <thead>
+                  <tr>
+                    <th data-i18n="date">Date</th>
+                    <th data-i18n="item">Item</th>
+                    <th data-i18n="category">Category</th>
+                    <th data-i18n="group">Group</th>
+                    <th data-i18n="payment">Payment</th>
+                    <th class="align-right" data-i18n="amount">Amount</th>
+                    <th class="align-right" data-i18n="actions">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="transaction-table-body"></tbody>
+              </table>
+            </div>
+          </article>
+        </section>
+
+        <section class="view" id="view-summary" data-view-panel="summary" aria-labelledby="view-title">
+          <div class="summary-toolbar">
+            <div>
+              <p class="section-kicker">ANNUAL VIEW</p>
+              <h2 data-i18n="summaryTitle">Monthly summary</h2>
+            </div>
+            <label class="year-control" for="summary-year-input">
+              <span data-i18n="selectedYear">Year</span>
+              <input id="summary-year-input" type="number" min="2000" max="2100" step="1">
+            </label>
+          </div>
+
+          <div class="kpi-grid summary-kpis">
+            <article class="mini-kpi"><span data-i18n="annualIncome">Annual income</span><strong id="annual-income">0</strong></article>
+            <article class="mini-kpi"><span data-i18n="annualSavings">Annual savings</span><strong id="annual-savings">0</strong></article>
+            <article class="mini-kpi"><span data-i18n="annualSavingsRate">Savings rate</span><strong id="annual-savings-rate">0%</strong></article>
+            <article class="mini-kpi"><span data-i18n="annualRemaining">Annual remaining</span><strong id="annual-remaining">0</strong></article>
+          </div>
+
+          <article class="panel trend-panel">
+            <div class="panel-heading compact">
+              <div>
+                <p class="section-kicker">TREND</p>
+                <h2 data-i18n="monthlySavingsTrend">Monthly savings rate</h2>
+              </div>
+            </div>
+            <div class="trend-chart" id="savings-trend-chart" role="img" aria-label="Monthly savings rate chart"></div>
+          </article>
+
+          <article class="panel">
+            <div class="table-scroll">
+              <table class="data-table summary-table">
+                <thead>
+                  <tr>
+                    <th data-i18n="month">Month</th>
+                    <th class="align-right" data-i18n="incomeShort">Income</th>
+                    <th class="align-right" data-i18n="needsShort">Needs</th>
+                    <th class="align-right" data-i18n="wantsShort">Wants</th>
+                    <th class="align-right" data-i18n="savingsShort">Savings</th>
+                    <th class="align-right" data-i18n="remainingShort">Remaining</th>
+                    <th class="align-right" data-i18n="savingsRate">Savings rate</th>
+                    <th data-i18n="status">Status</th>
+                  </tr>
+                </thead>
+                <tbody id="summary-table-body"></tbody>
+                <tfoot id="summary-table-foot"></tfoot>
+              </table>
+            </div>
+          </article>
+        </section>
+
+        <section class="view" id="view-settings" data-view-panel="settings" aria-labelledby="view-title">
+          <div class="settings-grid">
+            <article class="panel">
+              <div class="panel-heading compact">
+                <div>
+                  <p class="section-kicker">RULE</p>
+                  <h2 data-i18n="allocationSettings">Allocation settings</h2>
+                </div>
+                <span class="ratio-total" id="ratio-total">100%</span>
+              </div>
+              <form id="ratio-form" class="ratio-form">
+                <label class="ratio-field ratio-needs">
+                  <span data-i18n="needs">Needs</span>
+                  <div><input id="ratio-needs" type="number" min="0" max="100" step="1" required><b>%</b></div>
+                  <small data-i18n="needsGuidance"></small>
+                </label>
+                <label class="ratio-field ratio-wants">
+                  <span data-i18n="wants">Wants</span>
+                  <div><input id="ratio-wants" type="number" min="0" max="100" step="1" required><b>%</b></div>
+                  <small data-i18n="wantsGuidance"></small>
+                </label>
+                <label class="ratio-field ratio-savings">
+                  <span data-i18n="savings">Savings</span>
+                  <div><input id="ratio-savings" type="number" min="0" max="100" step="1" required><b>%</b></div>
+                  <small data-i18n="savingsGuidance"></small>
+                </label>
+                <p class="form-message" id="ratio-message"></p>
+                <button class="button button-primary" type="submit" data-i18n="saveRatios">Save ratios</button>
+              </form>
+            </article>
+
+            <article class="panel">
+              <div class="panel-heading compact">
+                <div>
+                  <p class="section-kicker">CLASSIFICATION</p>
+                  <h2 data-i18n="categorySettings">Categories</h2>
+                </div>
+              </div>
+              <form id="category-form" class="inline-form">
+                <input id="new-category-name" type="text" maxlength="60" placeholder="Category name" required>
+                <select id="new-category-group" required>
+                  <option value="income">Income</option>
+                  <option value="needs">Needs</option>
+                  <option value="wants">Wants</option>
+                  <option value="savings">Savings</option>
+                </select>
+                <button class="button button-secondary" type="submit" data-i18n="addCategory">Add category</button>
+              </form>
+              <div class="category-list" id="category-list"></div>
+            </article>
+
+            <article class="panel">
+              <div class="panel-heading compact">
+                <div>
+                  <p class="section-kicker">PAYMENT</p>
+                  <h2 data-i18n="paymentSettings">Payment methods</h2>
+                </div>
+              </div>
+              <form id="payment-form" class="inline-form payment-form">
+                <input id="new-payment-name" type="text" maxlength="60" placeholder="Payment method or account" required>
+                <button class="button button-secondary" type="submit" data-i18n="addPayment">Add payment method</button>
+              </form>
+              <div class="chip-list" id="payment-list"></div>
+            </article>
+
+            <article class="panel data-panel">
+              <div class="panel-heading compact">
+                <div>
+                  <p class="section-kicker">BACKUP</p>
+                  <h2 data-i18n="dataManagement">Data management</h2>
+                </div>
+              </div>
+              <p class="muted" data-i18n="localStorageNote"></p>
+              <div class="data-actions">
+                <button class="button button-secondary" id="backup-json-button" type="button" data-i18n="backupJson">Backup JSON</button>
+                <button class="button button-secondary" id="restore-json-button" type="button" data-i18n="restoreJson">Restore JSON</button>
+                <button class="button button-secondary" id="settings-export-csv-button" type="button" data-i18n="exportCsv">Export CSV</button>
+                <button class="button button-warning" id="reset-sample-button" type="button" data-i18n="resetSample">Restore sample</button>
+                <button class="button button-danger" id="clear-transactions-button" type="button" data-i18n="clearTransactions">Clear transactions</button>
+              </div>
+              <input id="restore-json-input" type="file" accept="application/json,.json" hidden>
+            </article>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <dialog class="transaction-dialog" id="transaction-dialog">
+    <form id="transaction-form" novalidate>
+      <div class="dialog-heading">
+        <div>
+          <p class="section-kicker">CASH FLOW</p>
+          <h2 id="transaction-dialog-title" data-i18n="addTransaction">Add transaction</h2>
+        </div>
+        <button class="icon-button" id="dialog-close-button" type="button" aria-label="Close">&times;</button>
+      </div>
+
+      <div class="form-grid">
+        <label>
+          <span data-i18n="date">Date</span>
+          <input id="transaction-date" type="date" required>
+        </label>
+        <label>
+          <span data-i18n="group">Group</span>
+          <select id="transaction-group" required>
+            <option value="income">Income</option>
+            <option value="needs">Needs</option>
+            <option value="wants">Wants</option>
+            <option value="savings">Savings</option>
+          </select>
+        </label>
+        <label class="span-2">
+          <span data-i18n="item">Item</span>
+          <input id="transaction-description" type="text" maxlength="100" placeholder="Description">
+        </label>
+        <label>
+          <span data-i18n="category">Category</span>
+          <select id="transaction-category" required></select>
+        </label>
+        <label>
+          <span data-i18n="amount">Amount</span>
+          <input id="transaction-amount" type="number" min="0.01" step="0.01" inputmode="decimal" required>
+        </label>
+        <label>
+          <span data-i18n="payment">Payment</span>
+          <select id="transaction-payment"></select>
+        </label>
+        <label>
+          <span data-i18n="note">Note</span>
+          <input id="transaction-note" type="text" maxlength="150">
+        </label>
+      </div>
+
+      <section class="salary-live-preview" id="salary-live-preview" hidden>
+        <div class="salary-live-preview-head">
+          <strong>ตัวอย่างแบ่งเงินเดือนทันที</strong>
+          <span id="salary-live-base">ฐาน ฿0</span>
+        </div>
+        <div class="salary-live-grid">
+          <div class="salary-live-item">
+            <span id="salary-live-needs-label">จำเป็น 50%</span>
+            <strong id="salary-live-needs">฿0</strong>
+            <small>งบสูงสุดแนะนำ</small>
+          </div>
+          <div class="salary-live-item">
+            <span id="salary-live-wants-label">ความสุข 30%</span>
+            <strong id="salary-live-wants">฿0</strong>
+            <small>งบใช้เพื่อความสุข</small>
+          </div>
+          <div class="salary-live-item">
+            <span id="salary-live-savings-label">ออม 20%</span>
+            <strong id="salary-live-savings">฿0</strong>
+            <small>เป้าหมายออม/ลงทุน</small>
+          </div>
+        </div>
+      </section>
+
+      <p class="form-message" id="transaction-form-message"></p>
+      <div class="dialog-actions">
+        <button class="button button-secondary" id="dialog-cancel-button" type="button" data-i18n="cancel">Cancel</button>
+        <button class="button button-primary" type="submit" data-i18n="save">Save</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+window.BUDGET_SEED = {"version":4,"labels":{"appTitle":"Dashboard บริหารเงินด้วยสูตร 50/30/20","dashboard":"Dashboard","transactions":"รายการเงิน","summary":"สรุปรายเดือน","settings":"ตั้งค่า","selectedMonth":"เดือนที่วิเคราะห์","monthHint":"เปลี่ยนเดือนในช่องสีเหลือง แล้ว Dashboard จะสรุปเฉพาะรายการของเดือนนั้น","incomeTotal":"รายรับรวม","expenseTotal":"ค่าใช้จ่ายรวม","savingsTotal":"ออมและลงทุน","remaining":"เงินคงเหลือ","group":"กลุ่ม","target":"เป้าหมาย","targetBudget":"งบเป้าหมาย","actual":"ยอดจริง","percentIncome":"% ของเงินเดือน","variance":"ส่วนต่างจากเป้า","status":"สถานะ","needs":"ค่าใช้จ่ายจำเป็น","wants":"ความสุขส่วนตัว","savings":"การออมและการลงทุน","inPlan":"อยู่ในแผน","targetReached":"ถึงเป้า","automaticAdvice":"ข้อเสนอแนะอัตโนมัติ","defaultAdvice":"โครงสร้างการเงินอยู่ในแผนและการออมถึงเป้าหมายแล้ว","usage":"วิธีใช้งาน","usageText":"1) ไปที่ชีต รายการเงิน แล้วบันทึกรายรับและเงินออก\n2) เลือกหมวดย่อย ระบบจะจัดเข้ากลุ่ม 50/30/20 ให้อัตโนมัติ\n3) เปลี่ยนเดือนที่ Dashboard ช่องสีเหลืองเพื่อดูผลรายเดือน\n4) ปรับสัดส่วนหรือเพิ่มหมวดได้ในชีต ตั้งค่า\n5) ดูแนวโน้มทั้งปีได้ในชีต สรุปรายเดือน","transactionsTitle":"บันทึกรายรับ รายจ่าย การออมและการลงทุน","transactionsHint":"เพิ่มรายรับ รายจ่าย เงินออม และการลงทุนได้จากหน้านี้ | เงินเดือนแก้ไขได้โดยกดปุ่ม “ใส่/แก้ไขเงินเดือน” บนการ์ดรายรับ หรือกดปุ่มแก้ไขในตาราง","date":"วันที่","item":"รายการ","category":"หมวดย่อย","group503020":"กลุ่ม 50/30/20","incomeAmount":"เงินเข้า (บาท)","outflowAmount":"เงินออก (บาท)","payment":"ช่องทาง","note":"หมายเหตุ","check":"ตรวจสอบ","income":"รายรับ","normal":"ปกติ","summaryTitle":"สรุปการเงินรายเดือนตลอดปี","selectedYear":"ปีที่วิเคราะห์","month":"เดือน","incomeShort":"รายรับ","needsShort":"จำเป็น","wantsShort":"ความสุข","savingsShort":"ออม/ลงทุน","remainingShort":"คงเหลือ","savingsRate":"อัตราออม","noData":"ไม่มีข้อมูล","totalAverage":"รวม/เฉลี่ย","settingsTitle":"ตั้งค่า Dashboard 50/30/20","targetRatio":"สัดส่วนเป้าหมาย","guidance":"แนวทาง","subCategory":"หมวดย่อย","paymentAccount":"ช่องทางชำระ/บัญชี","total":"รวม","ratioMustEqual":"ผลรวมต้องเท่ากับ 100%","addTransaction":"บันทึกรายการ","save":"บันทึก","edit":"แก้ไข","delete":"ลบ","cancel":"ยกเลิก","search":"ค้นหารายการ","allGroups":"ทุกกลุ่ม","actions":"จัดการ","amount":"จำนวนเงิน (บาท)","recentTransactions":"รายการเงิน","targetVsActual":"เป้าหมาย / ยอดจริง","actualAllocation":"ยอดจริงเทียบเงินเดือน","usedAllocated":"% ของเงินเดือน","monthlySavingsTrend":"Monthly savings rate","annualIncome":"รายรับรวม","annualSavings":"ออม/ลงทุน รวม","annualRemaining":"คงเหลือ รวม","annualSavingsRate":"อัตราออม","allocationSettings":"สัดส่วนเป้าหมาย","categorySettings":"หมวดย่อย","paymentSettings":"ช่องทางชำระ/บัญชี","dataManagement":"Data management","addCategory":"Add category","addPayment":"Add payment method","saveRatios":"Save ratios","backupJson":"Backup JSON","restoreJson":"Restore JSON","exportCsv":"Export CSV","resetSample":"Restore sample data","clearTransactions":"Clear transactions","printReport":"Print / Save PDF","localStorageNote":"Data is stored only in this browser. Use JSON backup before changing device or clearing browser data.","noTransactions":"No transactions for this period.","overBudget":"Over budget","belowTarget":"Below target","noIncome":"No income recorded","goodStatus":"On track","needsGuidance":"ที่อยู่อาศัย อาหาร เดินทาง สาธารณูปโภค และภาระจำเป็น","wantsGuidance":"ร้านอาหาร ช้อปปิ้ง ท่องเที่ยว งานอดิเรก และความบันเทิง","savingsGuidance":"เงินสำรองฉุกเฉิน เงินออม การลงทุน และชำระหนี้เพิ่ม","budgetAllocation":"กลุ่ม 50/30/20","setSalary":"ใส่เงินเดือน","editSalary":"แก้ไขเงินเดือน","setSalaryHint":"เพิ่มเงินเดือนสำหรับเดือนที่เลือก","editSalaryHint":"แก้ไขยอดเงินเดือนของเดือนที่เลือก","salaryDialogAdd":"ใส่เงินเดือน","salaryDialogEdit":"แก้ไขเงินเดือน","salarySaved":"บันทึกเงินเดือนและคำนวณแผน 50/30/20 แล้ว","salaryDescription":"เงินเดือนประจำ","incomeEntry":"รายการรายรับ","incomeEntries":"รายการรายรับ","noCategory":"ไม่มีหมวดในกลุ่มนี้","transactionValidation":"กรุณากรอกวันที่ กลุ่ม หมวด และจำนวนเงินที่มากกว่า 0 ให้ครบ"},"groupLabels":{"income":"รายรับ","needs":"ค่าใช้จ่ายจำเป็น","wants":"ความสุขส่วนตัว","savings":"การออมและการลงทุน"},"defaultState":{"version":4,"settings":{"ratios":{"needs":0.5,"wants":0.3,"savings":0.2},"categories":[{"id":"cat-1","name":"เงินเดือน","group":"income"},{"id":"cat-2","name":"โบนัส","group":"income"},{"id":"cat-3","name":"รายได้เสริม","group":"income"},{"id":"cat-4","name":"ค่าเช่า/ผ่อนบ้าน","group":"needs"},{"id":"cat-5","name":"อาหารประจำวัน","group":"needs"},{"id":"cat-6","name":"ค่าน้ำ/ไฟ/อินเทอร์เน็ต","group":"needs"},{"id":"cat-7","name":"ค่าเดินทาง","group":"needs"},{"id":"cat-8","name":"ประกัน/ค่ารักษา","group":"needs"},{"id":"cat-9","name":"ชำระหนี้ขั้นต่ำ","group":"needs"},{"id":"cat-10","name":"ค่าเลี้ยงดูครอบครัว","group":"needs"},{"id":"cat-11","name":"ร้านอาหาร/คาเฟ่","group":"wants"},{"id":"cat-12","name":"ช้อปปิ้ง","group":"wants"},{"id":"cat-13","name":"ท่องเที่ยว","group":"wants"},{"id":"cat-14","name":"บันเทิง/สมาชิก","group":"wants"},{"id":"cat-15","name":"งานอดิเรก","group":"wants"},{"id":"cat-16","name":"ของขวัญ","group":"wants"},{"id":"cat-17","name":"เงินสำรองฉุกเฉิน","group":"savings"},{"id":"cat-18","name":"เงินฝาก/ออม","group":"savings"},{"id":"cat-19","name":"กองทุน/หุ้น","group":"savings"},{"id":"cat-20","name":"ชำระหนี้เพิ่ม","group":"savings"},{"id":"cat-21","name":"เกษียณ/ประกันบำนาญ","group":"savings"},{"id":"cat-22","name":"อื่นๆ-จำเป็น","group":"needs"},{"id":"cat-23","name":"อื่นๆ-ความสุข","group":"wants"},{"id":"cat-24","name":"อื่นๆ-ออม/ลงทุน","group":"savings"}],"payments":["เงินสด","โอนธนาคาร","บัตรเครดิต","E-Wallet","หักบัญชีอัตโนมัติ"]},"transactions":[{"id":"sample-1","date":"2026-09-01","description":"เงินเดือนประจำ","categoryId":"cat-1","categoryName":"เงินเดือน","group":"income","amount":50000,"payment":"โอนธนาคาร","note":"ตัวอย่างรายรับ","createdAt":"2026-09-01T00:00:00.000Z"},{"id":"sample-2","date":"2026-09-01","description":"ค่าที่อยู่อาศัย","categoryId":"cat-4","categoryName":"ค่าเช่า/ผ่อนบ้าน","group":"needs","amount":12000,"payment":"โอนธนาคาร","note":"","createdAt":"2026-09-01T00:00:00.000Z"},{"id":"sample-3","date":"2026-09-02","description":"งบอาหารประจำเดือน","categoryId":"cat-5","categoryName":"อาหารประจำวัน","group":"needs","amount":6000,"payment":"โอนธนาคาร","note":"","createdAt":"2026-09-02T00:00:00.000Z"},{"id":"sample-4","date":"2026-09-02","description":"ค่าน้ำ ค่าไฟ อินเทอร์เน็ต","categoryId":"cat-6","categoryName":"ค่าน้ำ/ไฟ/อินเทอร์เน็ต","group":"needs","amount":2500,"payment":"หักบัญชีอัตโนมัติ","note":"","createdAt":"2026-09-02T00:00:00.000Z"},{"id":"sample-5","date":"2026-09-03","description":"ค่าเดินทาง","categoryId":"cat-7","categoryName":"ค่าเดินทาง","group":"needs","amount":3000,"payment":"เงินสด","note":"","createdAt":"2026-09-03T00:00:00.000Z"},{"id":"sample-6","date":"2026-09-03","description":"ประกันและสุขภาพ","categoryId":"cat-8","categoryName":"ประกัน/ค่ารักษา","group":"needs","amount":1500,"payment":"บัตรเครดิต","note":"","createdAt":"2026-09-03T00:00:00.000Z"},{"id":"sample-7","date":"2026-09-04","description":"ร้านอาหารและคาเฟ่","categoryId":"cat-11","categoryName":"ร้านอาหาร/คาเฟ่","group":"wants","amount":3000,"payment":"บัตรเครดิต","note":"","createdAt":"2026-09-04T00:00:00.000Z"},{"id":"sample-8","date":"2026-09-04","description":"ช้อปปิ้งส่วนตัว","categoryId":"cat-12","categoryName":"ช้อปปิ้ง","group":"wants","amount":4000,"payment":"บัตรเครดิต","note":"","createdAt":"2026-09-04T00:00:00.000Z"},{"id":"sample-9","date":"2026-09-05","description":"สมาชิกและความบันเทิง","categoryId":"cat-14","categoryName":"บันเทิง/สมาชิก","group":"wants","amount":2000,"payment":"บัตรเครดิต","note":"","createdAt":"2026-09-05T00:00:00.000Z"},{"id":"sample-10","date":"2026-09-05","description":"งานอดิเรก","categoryId":"cat-15","categoryName":"งานอดิเรก","group":"wants","amount":2000,"payment":"โอนธนาคาร","note":"","createdAt":"2026-09-05T00:00:00.000Z"},{"id":"sample-11","date":"2026-09-06","description":"งบท่องเที่ยว","categoryId":"cat-13","categoryName":"ท่องเที่ยว","group":"wants","amount":4000,"payment":"โอนธนาคาร","note":"","createdAt":"2026-09-06T00:00:00.000Z"},{"id":"sample-12","date":"2026-09-06","description":"เงินสำรองฉุกเฉิน","categoryId":"cat-17","categoryName":"เงินสำรองฉุกเฉิน","group":"savings","amount":4000,"payment":"โอนธนาคาร","note":"โอนทันทีหลังรับเงิน","createdAt":"2026-09-06T00:00:00.000Z"},{"id":"sample-13","date":"2026-09-07","description":"เงินออม","categoryId":"cat-18","categoryName":"เงินฝาก/ออม","group":"savings","amount":2000,"payment":"โอนธนาคาร","note":"","createdAt":"2026-09-07T00:00:00.000Z"},{"id":"sample-14","date":"2026-09-07","description":"ลงทุนรายเดือน","categoryId":"cat-19","categoryName":"กองทุน/หุ้น","group":"savings","amount":4000,"payment":"โอนธนาคาร","note":"DCA","createdAt":"2026-09-07T00:00:00.000Z"}],"ui":{"month":"2026-09","year":2026}}};
+  </script>
+  <script>
+(function () {
+  'use strict';
+
+  var SEED = window.BUDGET_SEED;
+  if (!SEED || !SEED.defaultState) {
+    document.body.innerHTML = '<div class="noscript">Dashboard data could not be loaded.</div>';
+    return;
+  }
+
+  var L = SEED.labels || {};
+  var STORAGE_KEY = 'money-flow-503020-state-v1';
+  var VALID_GROUPS = ['income', 'needs', 'wants', 'savings'];
+  var BUDGET_GROUPS = ['needs', 'wants', 'savings'];
+  var currentView = 'dashboard';
+  var editingTransactionId = null;
+  var transactionDialogMode = 'general';
+  var toastTimer = null;
+  var hasStoredState = false;
+  var state = loadState();
+
+  var currencyFormatter = new Intl.NumberFormat('th-TH', {
+    style: 'currency',
+    currency: 'THB',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2
+  });
+
+  var numberFormatter = new Intl.NumberFormat('th-TH', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2
+  });
+
+  function byId(id) {
+    return document.getElementById(id);
+  }
+
+  function clone(value) {
+    return JSON.parse(JSON.stringify(value));
+  }
+
+  function makeId(prefix) {
+    if (window.crypto && typeof window.crypto.randomUUID === 'function') {
+      return prefix + '-' + window.crypto.randomUUID();
+    }
+    return prefix + '-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 9);
+  }
+
+  function escapeHtml(value) {
+    return String(value == null ? '' : value).replace(/[&<>"']/g, function (character) {
+      return {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+      }[character];
+    });
+  }
+
+  function normalizeState(raw) {
+    var base = clone(SEED.defaultState);
+    if (!raw || typeof raw !== 'object') {
+      return base;
+    }
+
+    var normalized = {
+      version: Number(SEED.version) || 3,
+      settings: {
+        ratios: clone(base.settings.ratios),
+        categories: clone(base.settings.categories),
+        payments: clone(base.settings.payments)
+      },
+      transactions: [],
+      ui: clone(base.ui)
+    };
+
+    if (raw.settings && raw.settings.ratios) {
+      BUDGET_GROUPS.forEach(function (group) {
+        var value = Number(raw.settings.ratios[group]);
+        if (Number.isFinite(value) && value >= 0 && value <= 1) {
+          normalized.settings.ratios[group] = value;
+        }
+      });
+    }
+
+    if (raw.settings && Array.isArray(raw.settings.categories)) {
+      var categoryIds = new Set();
+      var categories = raw.settings.categories.filter(function (category) {
+        if (!category || !VALID_GROUPS.includes(category.group)) {
+          return false;
+        }
+        var name = String(category.name || '').trim();
+        if (!name) {
+          return false;
+        }
+        var id = String(category.id || makeId('cat'));
+        if (categoryIds.has(id)) {
+          id = makeId('cat');
+        }
+        category.id = id;
+        category.name = name;
+        categoryIds.add(id);
+        return true;
+      }).map(function (category) {
+        return {
+          id: String(category.id),
+          name: String(category.name),
+          group: category.group
+        };
+      });
+      if (categories.length) {
+        normalized.settings.categories = categories;
+      }
+    }
+
+    // เงินเดือนเป็นหมวดพื้นฐานที่ต้องมีเสมอ เพื่อให้ข้อมูลเก่าจาก Version ก่อนหน้า
+    // ยังสามารถเพิ่มและแก้ไขรายรับประจำได้ แม้ผู้ใช้เคยลบหมวดรายรับออกไป
+    var defaultSalaryCategory = base.settings.categories.find(function (category) {
+      return category.group === 'income' && category.name === 'เงินเดือน';
+    });
+    var hasSalaryCategory = normalized.settings.categories.some(function (category) {
+      return category.group === 'income' && category.name.trim() === 'เงินเดือน';
+    });
+    if (!hasSalaryCategory) {
+      var salaryCategory = clone(defaultSalaryCategory || {
+        id: 'cat-salary',
+        name: 'เงินเดือน',
+        group: 'income'
+      });
+      if (normalized.settings.categories.some(function (category) { return category.id === salaryCategory.id; })) {
+        salaryCategory.id = makeId('cat');
+      }
+      normalized.settings.categories.unshift(salaryCategory);
+    }
+
+    if (raw.settings && Array.isArray(raw.settings.payments)) {
+      var uniquePayments = [];
+      raw.settings.payments.forEach(function (payment) {
+        var value = String(payment || '').trim();
+        if (value && !uniquePayments.includes(value)) {
+          uniquePayments.push(value);
+        }
+      });
+      normalized.settings.payments = uniquePayments;
+    }
+
+    if (Array.isArray(raw.transactions)) {
+      normalized.transactions = raw.transactions.filter(function (transaction) {
+        return transaction && /^\d{4}-\d{2}-\d{2}$/.test(String(transaction.date || '')) && VALID_GROUPS.includes(transaction.group) && Number(transaction.amount) > 0;
+      }).map(function (transaction) {
+        return {
+          id: String(transaction.id || makeId('tx')),
+          date: String(transaction.date),
+          description: String(transaction.description || transaction.categoryName || ''),
+          categoryId: String(transaction.categoryId || ''),
+          categoryName: String(transaction.categoryName || ''),
+          group: transaction.group,
+          amount: Number(transaction.amount),
+          payment: String(transaction.payment || ''),
+          note: String(transaction.note || ''),
+          createdAt: String(transaction.createdAt || new Date().toISOString()),
+          updatedAt: String(transaction.updatedAt || transaction.createdAt || new Date().toISOString())
+        };
+      });
+    }
+
+    if (raw.ui && /^\d{4}-\d{2}$/.test(String(raw.ui.month || ''))) {
+      normalized.ui.month = String(raw.ui.month);
+    }
+    if (raw.ui && Number.isInteger(Number(raw.ui.year))) {
+      normalized.ui.year = Number(raw.ui.year);
+    } else {
+      normalized.ui.year = Number(normalized.ui.month.slice(0, 4));
+    }
+
+    return normalized;
+  }
+
+  function loadState() {
+    try {
+      var stored = localStorage.getItem(STORAGE_KEY);
+      hasStoredState = Boolean(stored);
+      return stored ? normalizeState(JSON.parse(stored)) : clone(SEED.defaultState);
+    } catch (error) {
+      hasStoredState = false;
+      return clone(SEED.defaultState);
+    }
+  }
+
+  function saveState(silent) {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      if (!silent) {
+        showToast('Saved');
+      }
+      return true;
+    } catch (error) {
+      showToast('Could not save browser data.', true);
+      return false;
+    }
+  }
+
+  function formatCurrency(value) {
+    return currencyFormatter.format(Number(value) || 0);
+  }
+
+  function formatNumber(value) {
+    return numberFormatter.format(Number(value) || 0);
+  }
+
+  function formatPercent(value, digits) {
+    var precision = Number.isInteger(digits) ? digits : 1;
+    return (Number(value) || 0).toFixed(precision) + '%';
+  }
+
+  function monthLabel(monthKey) {
+    var parts = String(monthKey).split('-');
+    var year = Number(parts[0]);
+    var month = Number(parts[1]);
+    if (!year || !month) {
+      return monthKey;
+    }
+    var label = new Intl.DateTimeFormat('th-TH', { month: 'long', timeZone: 'UTC' })
+      .format(new Date(Date.UTC(year, month - 1, 1)));
+    return label + ' ' + year;
+  }
+
+  function shortMonthLabel(year, monthIndex) {
+    return new Intl.DateTimeFormat('th-TH', { month: 'short', timeZone: 'UTC' })
+      .format(new Date(Date.UTC(year, monthIndex, 1)));
+  }
+
+  function formatDate(dateString) {
+    var parts = String(dateString).split('-');
+    var year = Number(parts[0]);
+    var month = Number(parts[1]);
+    var day = Number(parts[2]);
+    if (!year || !month || !day) {
+      return dateString;
+    }
+    var monthText = new Intl.DateTimeFormat('th-TH', { month: 'short', timeZone: 'UTC' })
+      .format(new Date(Date.UTC(year, month - 1, day)));
+    return day + ' ' + monthText + ' ' + year;
+  }
+
+  function groupLabel(group) {
+    return (SEED.groupLabels && SEED.groupLabels[group]) || group;
+  }
+
+  function getCategory(categoryId) {
+    return state.settings.categories.find(function (category) {
+      return category.id === categoryId;
+    }) || null;
+  }
+
+  function getSalaryCategory() {
+    return state.settings.categories.find(function (category) {
+      return category.group === 'income' && category.name.trim() === 'เงินเดือน';
+    }) || null;
+  }
+
+  function ensureSalaryCategory() {
+    var salaryCategory = getSalaryCategory();
+    if (salaryCategory) {
+      return salaryCategory;
+    }
+
+    var defaultCategory = SEED.defaultState.settings.categories.find(function (category) {
+      return category.group === 'income' && category.name === 'เงินเดือน';
+    });
+    salaryCategory = clone(defaultCategory || {
+      id: makeId('cat'),
+      name: 'เงินเดือน',
+      group: 'income'
+    });
+    if (state.settings.categories.some(function (category) { return category.id === salaryCategory.id; })) {
+      salaryCategory.id = makeId('cat');
+    }
+    state.settings.categories.unshift(salaryCategory);
+    saveState(true);
+    return salaryCategory;
+  }
+
+  function isSalaryTransaction(transaction) {
+    if (!transaction || transaction.group !== 'income') {
+      return false;
+    }
+    var salaryCategory = getSalaryCategory();
+    var categoryName = String(transaction.categoryName || '').trim();
+    var description = String(transaction.description || '').trim();
+    return (salaryCategory && transaction.categoryId === salaryCategory.id) ||
+      categoryName === 'เงินเดือน' ||
+      description.indexOf('เงินเดือน') >= 0;
+  }
+
+  function monthlySalaryTransactions(monthKey) {
+    return state.transactions.filter(function (transaction) {
+      return transaction.date.slice(0, 7) === monthKey && isSalaryTransaction(transaction);
+    }).sort(function (a, b) {
+      return a.date.localeCompare(b.date) || String(a.createdAt || '').localeCompare(String(b.createdAt || ''));
+    });
+  }
+
+  function monthlySalaryTransaction(monthKey) {
+    return monthlySalaryTransactions(monthKey)[0] || null;
+  }
+
+  function monthlySalaryAmount(monthKey) {
+    return monthlySalaryTransactions(monthKey).reduce(function (sum, transaction) {
+      return sum + (Number(transaction.amount) || 0);
+    }, 0);
+  }
+
+  function monthTransactions(monthKey) {
+    return state.transactions.filter(function (transaction) {
+      return transaction.date.slice(0, 7) === monthKey;
+    });
+  }
+
+  function calculateMonth(monthKey) {
+    var transactions = monthTransactions(monthKey);
+    var totals = {
+      month: monthKey,
+      income: 0,
+      salary: 0,
+      otherIncome: 0,
+      budgetBase: 0,
+      needs: 0,
+      wants: 0,
+      savings: 0,
+      count: transactions.length,
+      incomeCount: 0,
+      outflowCount: 0
+    };
+
+    transactions.forEach(function (transaction) {
+      totals[transaction.group] += Number(transaction.amount) || 0;
+      if (transaction.group === 'income') {
+        totals.incomeCount += 1;
+      } else {
+        totals.outflowCount += 1;
+      }
+    });
+
+    totals.salary = monthlySalaryAmount(monthKey);
+    totals.otherIncome = Math.max(totals.income - totals.salary, 0);
+    totals.budgetBase = totals.salary;
+    totals.expense = totals.needs + totals.wants;
+    totals.outflow = totals.expense + totals.savings;
+    totals.remaining = totals.income - totals.outflow;
+    totals.savingsRate = totals.budgetBase > 0 ? (totals.savings / totals.budgetBase) * 100 : 0;
+    totals.targets = {
+      needs: totals.budgetBase * state.settings.ratios.needs,
+      wants: totals.budgetBase * state.settings.ratios.wants,
+      savings: totals.budgetBase * state.settings.ratios.savings
+    };
+    return totals;
+  }
+
+  function statusFor(group, actual, target, hasIncome) {
+    if (!hasIncome) {
+      return { label: L.noIncome || 'No income', className: 'status-neutral' };
+    }
+    if (group === 'savings') {
+      return actual + 0.005 >= target
+        ? { label: L.targetReached || 'Target reached', className: 'status-good' }
+        : { label: L.belowTarget || 'Below target', className: 'status-warning' };
+    }
+    return actual <= target + 0.005
+      ? { label: L.inPlan || 'In plan', className: 'status-good' }
+      : { label: L.overBudget || 'Over budget', className: 'status-danger' };
+  }
+
+  function summaryStatus(totals) {
+    if (totals.budgetBase <= 0) {
+      return { label: L.noData || 'No data', className: 'status-neutral' };
+    }
+    if (totals.remaining < -0.005) {
+      return { label: L.overBudget || 'Over budget', className: 'status-danger' };
+    }
+    if (totals.savings + 0.005 >= totals.targets.savings) {
+      return { label: L.targetReached || 'Target reached', className: 'status-good' };
+    }
+    return { label: L.belowTarget || 'Below target', className: 'status-warning' };
+  }
+
+  function applyStaticLabels() {
+    document.querySelectorAll('[data-i18n]').forEach(function (element) {
+      var key = element.getAttribute('data-i18n');
+      if (Object.prototype.hasOwnProperty.call(L, key) && L[key]) {
+        element.textContent = L[key];
+      }
+    });
+
+    byId('transaction-search').placeholder = L.search || 'Search';
+    byId('new-category-name').placeholder = L.subCategory || 'Category name';
+    byId('new-payment-name').placeholder = L.paymentAccount || 'Payment method';
+    byId('transaction-description').placeholder = L.item || 'Description';
+
+    setGroupOptionLabels(byId('transaction-group-filter'), true);
+    setGroupOptionLabels(byId('new-category-group'), false);
+    setGroupOptionLabels(byId('transaction-group'), false);
+  }
+
+  function setGroupOptionLabels(select, includeAll) {
+    if (!select) {
+      return;
+    }
+    Array.prototype.forEach.call(select.options, function (option) {
+      if (option.value === 'all' && includeAll) {
+        option.textContent = L.allGroups || 'All groups';
+      } else if (VALID_GROUPS.includes(option.value)) {
+        option.textContent = groupLabel(option.value);
+      }
+    });
+  }
+
+  function setView(viewName) {
+    if (!['dashboard', 'transactions', 'summary', 'settings'].includes(viewName)) {
+      return;
+    }
+    currentView = viewName;
+    document.querySelectorAll('[data-view-panel]').forEach(function (panel) {
+      panel.classList.toggle('is-active', panel.getAttribute('data-view-panel') === viewName);
+    });
+    document.querySelectorAll('.nav-button').forEach(function (button) {
+      button.classList.toggle('is-active', button.getAttribute('data-view') === viewName);
+    });
+
+    var titleMap = {
+      dashboard: L.appTitle || '50/30/20 Dashboard',
+      transactions: L.transactionsTitle || L.transactions || 'Transactions',
+      summary: L.summaryTitle || L.summary || 'Monthly summary',
+      settings: L.settingsTitle || L.settings || 'Settings'
+    };
+    var subtitleMap = {
+      dashboard: monthLabel(state.ui.month),
+      transactions: monthLabel(state.ui.month),
+      summary: String(state.ui.year),
+      settings: 'Browser-based configuration and backup'
+    };
+    byId('view-title').textContent = titleMap[viewName];
+    byId('view-subtitle').textContent = subtitleMap[viewName];
+    document.title = titleMap[viewName] + ' | 50/30/20';
+  }
+
+  function renderAll() {
+    byId('month-input').value = state.ui.month;
+    byId('summary-year-input').value = state.ui.year;
+    renderDashboard();
+    renderTransactions();
+    renderSummary();
+    renderSettings();
+    setView(currentView);
+  }
+
+  function renderDashboard() {
+    var totals = calculateMonth(state.ui.month);
+    var savingsRate = totals.budgetBase > 0 ? (totals.savings / totals.budgetBase) * 100 : 0;
+
+    byId('kpi-income').textContent = formatCurrency(totals.income);
+    byId('kpi-expense').textContent = formatCurrency(totals.expense);
+    byId('kpi-savings').textContent = formatCurrency(totals.savings);
+    byId('kpi-remaining').textContent = formatCurrency(totals.remaining);
+    byId('kpi-remaining').classList.toggle('negative', totals.remaining < 0);
+    byId('kpi-remaining').classList.toggle('positive', totals.remaining > 0);
+
+    if (totals.salary > 0) {
+      var incomeNote = 'เงินเดือน ' + formatCurrency(totals.salary);
+      if (totals.otherIncome > 0) {
+        incomeNote += ' + รายรับอื่น ' + formatCurrency(totals.otherIncome);
+      }
+      byId('kpi-income-note').textContent = incomeNote;
+    } else {
+      byId('kpi-income-note').textContent = 'ยังไม่ได้ใส่เงินเดือนสำหรับเดือนนี้';
+    }
+
+    var salaryTransaction = monthlySalaryTransaction(state.ui.month);
+    var salaryButton = byId('salary-quick-button');
+    var salaryLabel = byId('salary-quick-label');
+    salaryLabel.textContent = salaryTransaction ? (L.editSalary || 'แก้ไขเงินเดือน') : (L.setSalary || 'ใส่เงินเดือน');
+    salaryButton.setAttribute('aria-label', salaryLabel.textContent + ' ' + monthLabel(state.ui.month));
+    salaryButton.title = salaryTransaction
+      ? (L.editSalaryHint || 'แก้ไขยอดเงินเดือนของเดือนที่เลือก')
+      : (L.setSalaryHint || 'เพิ่มเงินเดือนสำหรับเดือนที่เลือก');
+    byId('kpi-expense-note').textContent = formatCurrency(totals.needs) + ' + ' + formatCurrency(totals.wants);
+    byId('kpi-savings-note').textContent = totals.budgetBase > 0 ? formatPercent(savingsRate, 1) + ' ของเงินเดือน' : 'รอข้อมูลเงินเดือน';
+    byId('kpi-remaining-note').textContent = totals.remaining < 0 ? 'ใช้เงินมากกว่ารายรับรวม' : 'หลังหักรายการทั้งหมด';
+    byId('dashboard-month-label').textContent = monthLabel(state.ui.month);
+
+    renderSalaryPlan(totals);
+    renderBudgetTable(totals);
+    renderDonut(totals);
+    renderComparisonChart(totals);
+    renderAdvice(totals);
+    renderRecentTransactions();
+  }
+
+  function renderSalaryPlan(totals) {
+    var hasSalary = totals.salary > 0;
+    var panel = byId('salary-plan-panel');
+    panel.classList.toggle('is-empty', !hasSalary);
+    byId('salary-base-amount').textContent = hasSalary ? formatCurrency(totals.salary) : formatCurrency(0);
+    byId('salary-plan-button').textContent = hasSalary ? (L.editSalary || 'แก้ไขเงินเดือน') : (L.setSalary || 'ใส่เงินเดือน');
+
+    BUDGET_GROUPS.forEach(function (group) {
+      var ratioPercent = state.settings.ratios[group] * 100;
+      byId('salary-plan-' + group + '-ratio').textContent = formatPercent(ratioPercent, ratioPercent % 1 === 0 ? 0 : 1);
+      byId('salary-plan-' + group + '-amount').textContent = formatCurrency(totals.targets[group]);
+      byId('salary-plan-' + group + '-formula').textContent = formatPercent(ratioPercent, ratioPercent % 1 === 0 ? 0 : 1) + ' × ' + (hasSalary ? formatCurrency(totals.salary) : 'เงินเดือน');
+    });
+
+    if (!hasSalary) {
+      byId('salary-plan-caption').textContent = 'ใส่เงินเดือนของเดือนนี้ แล้วระบบจะแบ่งงบ 50/30/20 ให้ทันที';
+      byId('salary-plan-note').textContent = 'ยังไม่มีฐานเงินเดือน จึงยังไม่สามารถคำนวณงบเป้าหมายได้';
+      byId('budget-basis-label').textContent = 'ยังไม่ได้ใส่เงินเดือนสำหรับ ' + monthLabel(state.ui.month);
+    } else {
+      byId('salary-plan-caption').textContent = 'งบเป้าหมายสำหรับ ' + monthLabel(state.ui.month) + ' คำนวณจากเงินเดือนอัตโนมัติ';
+      var note = 'งบทั้ง 3 ส่วนเป็นเป้าหมายสำหรับวางแผน ไม่ใช่รายการใช้เงินจริง';
+      if (totals.otherIncome > 0) {
+        note += ' • รายรับอื่น ' + formatCurrency(totals.otherIncome) + ' ยังไม่ถูกนำมารวมในฐานคำนวณ';
+      }
+      byId('salary-plan-note').textContent = note;
+      byId('budget-basis-label').textContent = 'ฐานคำนวณ: เงินเดือน ' + formatCurrency(totals.salary) + (totals.otherIncome > 0 ? ' (ไม่รวมรายรับอื่น)' : '');
+    }
+  }
+
+  function renderBudgetTable(totals) {
+    var body = byId('budget-table-body');
+    var rows = BUDGET_GROUPS.map(function (group) {
+      var actual = totals[group];
+      var target = totals.targets[group];
+      var percentOfIncome = totals.budgetBase > 0 ? (actual / totals.budgetBase) * 100 : 0;
+      var targetPercent = state.settings.ratios[group] * 100;
+      var variance = group === 'savings' ? actual - target : target - actual;
+      var status = statusFor(group, actual, target, totals.budgetBase > 0);
+      var progress = target > 0 ? Math.min((actual / target) * 100, 100) : 0;
+      var isOver = group !== 'savings' && actual > target && totals.budgetBase > 0;
+      var varianceClass = variance > 0.005 ? 'positive' : variance < -0.005 ? 'negative' : '';
+      var varianceText = Math.abs(variance) < 0.005 ? '-' : (variance > 0 ? '+' : '-') + formatCurrency(Math.abs(variance));
+
+      return '<tr>' +
+        '<td data-label=""><div class="budget-group"><i class="group-dot ' + group + '"></i>' + escapeHtml(groupLabel(group)) + '</div></td>' +
+        '<td data-label="' + escapeHtml(L.target || 'Target') + '">' + formatPercent(targetPercent, 0) + '</td>' +
+        '<td data-label="' + escapeHtml(L.targetBudget || 'Target budget') + '">' + formatCurrency(target) + '</td>' +
+        '<td data-label="' + escapeHtml(L.actual || 'Actual') + '">' + formatCurrency(actual) + '</td>' +
+        '<td data-label="' + escapeHtml(L.percentIncome || '% of income') + '"><div class="inline-meter"><span>' + formatPercent(percentOfIncome, 1) + '</span><div class="inline-meter-track"><div class="inline-meter-fill ' + group + (isOver ? ' over' : '') + '" style="width:' + progress.toFixed(2) + '%"></div></div></div></td>' +
+        '<td data-label="' + escapeHtml(L.variance || 'Variance') + '" class="' + varianceClass + '">' + varianceText + '</td>' +
+        '<td data-label="' + escapeHtml(L.status || 'Status') + '"><span class="status-badge ' + status.className + '">' + escapeHtml(status.label) + '</span></td>' +
+        '</tr>';
+    });
+    body.innerHTML = rows.join('');
+  }
+
+  function renderDonut(totals) {
+    var donut = byId('allocation-donut');
+    var outflow = totals.outflow;
+    var base = Math.max(totals.budgetBase, outflow, 1);
+    var needs = (totals.needs / base) * 100;
+    var wants = (totals.wants / base) * 100;
+    var savings = (totals.savings / base) * 100;
+    var endNeeds = Math.min(needs, 100);
+    var endWants = Math.min(endNeeds + wants, 100);
+    var endSavings = Math.min(endWants + savings, 100);
+
+    donut.style.background = 'conic-gradient(' +
+      'var(--needs) 0 ' + endNeeds.toFixed(3) + '%,' +
+      'var(--wants) ' + endNeeds.toFixed(3) + '% ' + endWants.toFixed(3) + '%,' +
+      'var(--savings) ' + endWants.toFixed(3) + '% ' + endSavings.toFixed(3) + '%,' +
+      '#e2e8f0 ' + endSavings.toFixed(3) + '% 100%)';
+
+    var usedPercent = totals.budgetBase > 0 ? (outflow / totals.budgetBase) * 100 : 0;
+    byId('donut-percent').textContent = totals.budgetBase > 0 ? formatPercent(usedPercent, 0) : '--';
+    donut.setAttribute('aria-label', 'Allocated ' + formatPercent(usedPercent, 1) + ' of salary');
+
+    var legend = BUDGET_GROUPS.map(function (group) {
+      var percent = totals.budgetBase > 0 ? (totals[group] / totals.budgetBase) * 100 : 0;
+      return '<div class="legend-row">' +
+        '<i style="background:var(--' + group + ')"></i>' +
+        '<span>' + escapeHtml(groupLabel(group)) + '</span>' +
+        '<strong>' + formatCurrency(totals[group]) + ' / ' + formatPercent(percent, 1) + '</strong>' +
+        '</div>';
+    });
+    byId('allocation-legend').innerHTML = legend.join('');
+  }
+
+  function renderComparisonChart(totals) {
+    var maxValue = 1;
+    BUDGET_GROUPS.forEach(function (group) {
+      maxValue = Math.max(maxValue, totals.targets[group], totals[group]);
+    });
+
+    byId('comparison-chart').innerHTML = BUDGET_GROUPS.map(function (group) {
+      var targetWidth = (totals.targets[group] / maxValue) * 100;
+      var actualWidth = (totals[group] / maxValue) * 100;
+      return '<div class="bar-group">' +
+        '<div class="bar-label" title="' + escapeHtml(groupLabel(group)) + '">' + escapeHtml(groupLabel(group)) + '</div>' +
+        '<div class="bar-pair">' +
+          '<div class="bar-track" title="Target ' + escapeHtml(formatCurrency(totals.targets[group])) + '"><div class="bar-fill target" style="width:' + targetWidth.toFixed(2) + '%"></div></div>' +
+          '<div class="bar-track" title="Actual ' + escapeHtml(formatCurrency(totals[group])) + '"><div class="bar-fill actual ' + group + '" style="width:' + actualWidth.toFixed(2) + '%"></div></div>' +
+        '</div>' +
+        '<div class="bar-value">' + formatCurrency(totals[group]) + '</div>' +
+        '</div>';
+    }).join('');
+  }
+
+  function renderAdvice(totals) {
+    var title = 'ภาพรวมอยู่ในแผน';
+    var text = 'ค่าใช้จ่ายอยู่ในกรอบงบจากเงินเดือน และการออมถึงเป้าหมายแล้ว';
+
+    if (totals.budgetBase <= 0) {
+      title = 'กรุณาใส่เงินเดือน';
+      text = 'เมื่อกรอกเงินเดือน ระบบจะคำนวณงบค่าใช้จ่ายจำเป็น ความสุขส่วนตัว และการออม/ลงทุนให้อัตโนมัติ';
+    } else if (totals.remaining < -0.005) {
+      title = 'รายจ่ายรวมเกินรายรับ';
+      text = 'รายการทั้งหมดเกินรายรับรวม ' + formatCurrency(Math.abs(totals.remaining)) + ' ควรตรวจงบความสุขส่วนตัวก่อน แล้วจึงทบทวนค่าใช้จ่ายที่ยืดหยุ่นได้';
+    } else if (totals.needs > totals.targets.needs + 0.005) {
+      title = groupLabel('needs') + 'เกินงบ';
+      text = 'สูงกว่าเป้าหมายจากเงินเดือน ' + formatCurrency(totals.needs - totals.targets.needs) + ' ควรตรวจค่าใช้จ่ายประจำและภาระผูกพันที่ปรับลดได้';
+    } else if (totals.wants > totals.targets.wants + 0.005) {
+      title = groupLabel('wants') + 'เกินงบ';
+      text = 'สูงกว่าเป้าหมายจากเงินเดือน ' + formatCurrency(totals.wants - totals.targets.wants) + ' ลองกำหนดเพดานใช้จ่ายรายสัปดาห์';
+    } else if (totals.savings + 0.005 < totals.targets.savings) {
+      title = 'การออมยังต่ำกว่าเป้าหมาย';
+      text = 'ควรเพิ่มเงินออม/ลงทุนอีก ' + formatCurrency(totals.targets.savings - totals.savings) + ' เพื่อให้ถึงเป้าหมายจากเงินเดือนเดือนนี้';
+    } else if (totals.remaining > 0.005) {
+      title = 'ถึงเป้าหมายแล้ว';
+      text = 'ทุกกลุ่มอยู่ในแผนและยังมีเงินคงเหลือ ' + formatCurrency(totals.remaining) + ' สามารถเพิ่มเงินสำรองฉุกเฉินหรือลงทุนระยะยาวได้';
+    }
+
+    byId('advice-title').textContent = title;
+    byId('advice-text').textContent = text;
+  }
+
+  function sortedTransactions(transactions) {
+    return transactions.slice().sort(function (a, b) {
+      var dateCompare = b.date.localeCompare(a.date);
+      if (dateCompare !== 0) {
+        return dateCompare;
+      }
+      return String(b.createdAt).localeCompare(String(a.createdAt));
+    });
+  }
+
+  function transactionRow(transaction, includeActions) {
+    var category = transaction.categoryName || (getCategory(transaction.categoryId) || {}).name || '-';
+    var amountClass = transaction.group === 'income' ? 'amount-income' : 'amount-outflow';
+    var sign = transaction.group === 'income' ? '+' : '-';
+    var actions = '';
+    if (includeActions) {
+      actions = '<td data-label="' + escapeHtml(L.actions || 'Actions') + '" class="align-right"><div class="row-actions">' +
+        '<button class="row-action edit" type="button" data-action="edit" data-id="' + escapeHtml(transaction.id) + '" title="' + escapeHtml(L.edit || 'Edit') + '">E</button>' +
+        '<button class="row-action delete" type="button" data-action="delete" data-id="' + escapeHtml(transaction.id) + '" title="' + escapeHtml(L.delete || 'Delete') + '">X</button>' +
+        '</div></td>';
+    }
+    return '<tr>' +
+      '<td data-label="' + escapeHtml(L.date || 'Date') + '">' + escapeHtml(formatDate(transaction.date)) + '</td>' +
+      '<td data-label="' + escapeHtml(L.item || 'Item') + '"><strong>' + escapeHtml(transaction.description || category) + '</strong>' + (transaction.note ? '<div class="muted" title="' + escapeHtml(transaction.note) + '">' + escapeHtml(transaction.note) + '</div>' : '') + '</td>' +
+      '<td data-label="' + escapeHtml(L.category || 'Category') + '">' + escapeHtml(category) + '</td>' +
+      '<td data-label="' + escapeHtml(L.group || 'Group') + '"><span class="group-badge ' + transaction.group + '">' + escapeHtml(groupLabel(transaction.group)) + '</span></td>' +
+      (includeActions ? '<td data-label="' + escapeHtml(L.payment || 'Payment') + '">' + escapeHtml(transaction.payment || '-') + '</td>' : '') +
+      '<td data-label="' + escapeHtml(L.amount || 'Amount') + '" class="align-right ' + amountClass + '">' + sign + formatCurrency(transaction.amount) + '</td>' +
+      actions +
+      '</tr>';
+  }
+
+  function renderRecentTransactions() {
+    var transactions = sortedTransactions(monthTransactions(state.ui.month)).slice(0, 6);
+    var body = byId('recent-table-body');
+    if (!transactions.length) {
+      body.innerHTML = '<tr class="empty-row"><td colspan="5">' + escapeHtml(L.noTransactions || 'No transactions') + '</td></tr>';
+      return;
+    }
+    body.innerHTML = transactions.map(function (transaction) {
+      return transactionRow(transaction, false);
+    }).join('');
+  }
+
+  function filteredTransactions() {
+    var search = byId('transaction-search').value.trim().toLocaleLowerCase('th-TH');
+    var group = byId('transaction-group-filter').value;
+    return sortedTransactions(monthTransactions(state.ui.month)).filter(function (transaction) {
+      if (group !== 'all' && transaction.group !== group) {
+        return false;
+      }
+      if (!search) {
+        return true;
+      }
+      var haystack = [
+        transaction.description,
+        transaction.categoryName,
+        groupLabel(transaction.group),
+        transaction.payment,
+        transaction.note
+      ].join(' ').toLocaleLowerCase('th-TH');
+      return haystack.includes(search);
+    });
+  }
+
+  function renderTransactions() {
+    var transactions = filteredTransactions();
+    var body = byId('transaction-table-body');
+    if (!transactions.length) {
+      body.innerHTML = '<tr class="empty-row"><td colspan="7">' + escapeHtml(L.noTransactions || 'No transactions') + '</td></tr>';
+    } else {
+      body.innerHTML = transactions.map(function (transaction) {
+        return transactionRow(transaction, true);
+      }).join('');
+    }
+
+    var totals = calculateMonth(state.ui.month);
+    byId('transaction-stats').innerHTML = [
+      '<span class="stat-pill"><strong>' + totals.count + '</strong> items</span>',
+      '<span class="stat-pill">' + escapeHtml(L.incomeShort || 'Income') + ' <strong>' + formatCurrency(totals.income) + '</strong></span>',
+      '<span class="stat-pill">Outflow <strong>' + formatCurrency(totals.outflow) + '</strong></span>',
+      '<span class="stat-pill">' + escapeHtml(L.remainingShort || 'Remaining') + ' <strong class="' + (totals.remaining < 0 ? 'negative' : '') + '">' + formatCurrency(totals.remaining) + '</strong></span>'
+    ].join('');
+  }
+
+  function renderSummary() {
+    var year = Number(state.ui.year);
+    var monthly = [];
+    for (var month = 1; month <= 12; month += 1) {
+      monthly.push(calculateMonth(String(year) + '-' + String(month).padStart(2, '0')));
+    }
+
+    var annual = monthly.reduce(function (accumulator, totals) {
+      accumulator.income += totals.income;
+      accumulator.salary += totals.salary;
+      accumulator.needs += totals.needs;
+      accumulator.wants += totals.wants;
+      accumulator.savings += totals.savings;
+      accumulator.remaining += totals.remaining;
+      return accumulator;
+    }, { income: 0, salary: 0, needs: 0, wants: 0, savings: 0, remaining: 0 });
+    var annualRate = annual.salary > 0 ? (annual.savings / annual.salary) * 100 : 0;
+
+    byId('annual-income').textContent = formatCurrency(annual.income);
+    byId('annual-savings').textContent = formatCurrency(annual.savings);
+    byId('annual-savings-rate').textContent = formatPercent(annualRate, 1);
+    byId('annual-remaining').textContent = formatCurrency(annual.remaining);
+    byId('annual-remaining').classList.toggle('negative', annual.remaining < 0);
+    byId('annual-remaining').classList.toggle('positive', annual.remaining > 0);
+
+    byId('summary-table-body').innerHTML = monthly.map(function (totals, index) {
+      var status = summaryStatus(totals);
+      return '<tr>' +
+        '<td data-label="' + escapeHtml(L.month || 'Month') + '"><strong>' + escapeHtml(shortMonthLabel(year, index)) + ' ' + year + '</strong></td>' +
+        '<td data-label="' + escapeHtml(L.incomeShort || 'Income') + '" class="align-right">' + formatCurrency(totals.income) + '</td>' +
+        '<td data-label="' + escapeHtml(L.needsShort || 'Needs') + '" class="align-right">' + formatCurrency(totals.needs) + '</td>' +
+        '<td data-label="' + escapeHtml(L.wantsShort || 'Wants') + '" class="align-right">' + formatCurrency(totals.wants) + '</td>' +
+        '<td data-label="' + escapeHtml(L.savingsShort || 'Savings') + '" class="align-right">' + formatCurrency(totals.savings) + '</td>' +
+        '<td data-label="' + escapeHtml(L.remainingShort || 'Remaining') + '" class="align-right ' + (totals.remaining < 0 ? 'negative' : '') + '">' + formatCurrency(totals.remaining) + '</td>' +
+        '<td data-label="' + escapeHtml(L.savingsRate || 'Savings rate') + '" class="align-right">' + formatPercent(totals.savingsRate, 1) + '</td>' +
+        '<td data-label="' + escapeHtml(L.status || 'Status') + '"><span class="status-badge ' + status.className + '">' + escapeHtml(status.label) + '</span></td>' +
+        '</tr>';
+    }).join('');
+
+    var annualSavingsTarget = annual.salary * state.settings.ratios.savings;
+    var annualStatus = annual.salary > 0 && annual.savings + 0.005 >= annualSavingsTarget
+      ? { label: L.targetReached || 'Target reached', className: 'status-good' }
+      : annual.salary > 0
+        ? { label: L.belowTarget || 'Below target', className: 'status-warning' }
+        : { label: L.noData || 'No data', className: 'status-neutral' };
+
+    byId('summary-table-foot').innerHTML = '<tr>' +
+      '<td data-label="">' + escapeHtml(L.totalAverage || 'Total / average') + '</td>' +
+      '<td data-label="' + escapeHtml(L.incomeShort || 'Income') + '" class="align-right">' + formatCurrency(annual.income) + '</td>' +
+      '<td data-label="' + escapeHtml(L.needsShort || 'Needs') + '" class="align-right">' + formatCurrency(annual.needs) + '</td>' +
+      '<td data-label="' + escapeHtml(L.wantsShort || 'Wants') + '" class="align-right">' + formatCurrency(annual.wants) + '</td>' +
+      '<td data-label="' + escapeHtml(L.savingsShort || 'Savings') + '" class="align-right">' + formatCurrency(annual.savings) + '</td>' +
+      '<td data-label="' + escapeHtml(L.remainingShort || 'Remaining') + '" class="align-right ' + (annual.remaining < 0 ? 'negative' : '') + '">' + formatCurrency(annual.remaining) + '</td>' +
+      '<td data-label="' + escapeHtml(L.savingsRate || 'Savings rate') + '" class="align-right">' + formatPercent(annualRate, 1) + '</td>' +
+      '<td data-label="' + escapeHtml(L.status || 'Status') + '"><span class="status-badge ' + annualStatus.className + '">' + escapeHtml(annualStatus.label) + '</span></td>' +
+      '</tr>';
+
+    renderSavingsTrend(year, monthly);
+  }
+
+  function renderSavingsTrend(year, monthly) {
+    var width = 760;
+    var height = 250;
+    var left = 44;
+    var right = 18;
+    var top = 18;
+    var bottom = 36;
+    var chartWidth = width - left - right;
+    var chartHeight = height - top - bottom;
+    var rates = monthly.map(function (totals) { return totals.savingsRate; });
+    var maxRate = Math.max.apply(Math, [30].concat(rates));
+    var yMax = Math.max(30, Math.ceil(maxRate / 10) * 10);
+    var points = rates.map(function (rate, index) {
+      return {
+        x: left + (chartWidth * index) / 11,
+        y: top + chartHeight - (Math.min(rate, yMax) / yMax) * chartHeight,
+        rate: rate
+      };
+    });
+
+    var linePoints = points.map(function (point) {
+      return point.x.toFixed(2) + ',' + point.y.toFixed(2);
+    }).join(' ');
+    var areaPoints = left + ',' + (top + chartHeight) + ' ' + linePoints + ' ' + (left + chartWidth) + ',' + (top + chartHeight);
+    var svg = '<svg viewBox="0 0 ' + width + ' ' + height + '" role="img" aria-label="Monthly savings rate for ' + year + '">';
+
+    for (var tick = 0; tick <= 4; tick += 1) {
+      var tickValue = (yMax / 4) * tick;
+      var tickY = top + chartHeight - (chartHeight * tick) / 4;
+      svg += '<line class="trend-grid-line" x1="' + left + '" y1="' + tickY.toFixed(2) + '" x2="' + (left + chartWidth) + '" y2="' + tickY.toFixed(2) + '"></line>';
+      svg += '<text class="trend-axis-label" x="' + (left - 8) + '" y="' + (tickY + 3).toFixed(2) + '" text-anchor="end">' + formatPercent(tickValue, 0) + '</text>';
+    }
+
+    svg += '<polygon class="trend-area" points="' + areaPoints + '"></polygon>';
+    svg += '<polyline class="trend-line" points="' + linePoints + '"></polyline>';
+    points.forEach(function (point, index) {
+      svg += '<circle class="trend-dot" cx="' + point.x.toFixed(2) + '" cy="' + point.y.toFixed(2) + '" r="4"><title>' + escapeHtml(shortMonthLabel(year, index)) + ': ' + formatPercent(point.rate, 1) + '</title></circle>';
+      svg += '<text class="trend-axis-label" x="' + point.x.toFixed(2) + '" y="' + (height - 12) + '" text-anchor="middle">' + escapeHtml(shortMonthLabel(year, index)) + '</text>';
+    });
+    svg += '</svg>';
+    byId('savings-trend-chart').innerHTML = svg;
+  }
+
+  function renderSettings() {
+    byId('ratio-needs').value = Math.round(state.settings.ratios.needs * 10000) / 100;
+    byId('ratio-wants').value = Math.round(state.settings.ratios.wants * 10000) / 100;
+    byId('ratio-savings').value = Math.round(state.settings.ratios.savings * 10000) / 100;
+    updateRatioTotal();
+    renderCategories();
+    renderPayments();
+  }
+
+  function updateRatioTotal() {
+    var total = ['ratio-needs', 'ratio-wants', 'ratio-savings'].reduce(function (sum, id) {
+      return sum + (Number(byId(id).value) || 0);
+    }, 0);
+    var badge = byId('ratio-total');
+    badge.textContent = formatPercent(total, total % 1 === 0 ? 0 : 1);
+    badge.classList.toggle('invalid', Math.abs(total - 100) > 0.005);
+    return total;
+  }
+
+  function renderCategories() {
+    var order = { income: 0, needs: 1, wants: 2, savings: 3 };
+    var categories = state.settings.categories.slice().sort(function (a, b) {
+      var groupDifference = order[a.group] - order[b.group];
+      return groupDifference || a.name.localeCompare(b.name, 'th');
+    });
+    byId('category-list').innerHTML = categories.map(function (category) {
+      return '<div class="category-row">' +
+        '<strong title="' + escapeHtml(category.name) + '">' + escapeHtml(category.name) + '</strong>' +
+        '<span class="group-badge ' + category.group + '">' + escapeHtml(groupLabel(category.group)) + '</span>' +
+        '<button class="row-action delete" type="button" data-category-delete="' + escapeHtml(category.id) + '" title="' + escapeHtml(L.delete || 'Delete') + '">X</button>' +
+        '</div>';
+    }).join('');
+  }
+
+  function renderPayments() {
+    if (!state.settings.payments.length) {
+      byId('payment-list').innerHTML = '<span class="muted">No payment methods.</span>';
+      return;
+    }
+    byId('payment-list').innerHTML = state.settings.payments.map(function (payment, index) {
+      return '<span class="chip">' + escapeHtml(payment) + '<button type="button" data-payment-delete="' + index + '" title="' + escapeHtml(L.delete || 'Delete') + '">&times;</button></span>';
+    }).join('');
+  }
+
+  function refreshCategorySelect(selectedId, selectedName) {
+    var group = byId('transaction-group').value;
+    var categories = state.settings.categories.filter(function (category) {
+      return category.group === group;
+    });
+    var select = byId('transaction-category');
+    if (!categories.length) {
+      select.innerHTML = '<option value="">' + escapeHtml(L.noCategory || 'ไม่มีหมวดในกลุ่มนี้') + '</option>';
+      return;
+    }
+    select.innerHTML = categories.map(function (category) {
+      return '<option value="' + escapeHtml(category.id) + '">' + escapeHtml(category.name) + '</option>';
+    }).join('');
+    if (selectedId && categories.some(function (category) { return category.id === selectedId; })) {
+      select.value = selectedId;
+      return;
+    }
+    if (selectedName) {
+      var matchedCategory = categories.find(function (category) {
+        return category.name.trim() === String(selectedName).trim();
+      });
+      if (matchedCategory) {
+        select.value = matchedCategory.id;
+      }
+    }
+  }
+
+  function refreshPaymentSelect(selectedPayment) {
+    var select = byId('transaction-payment');
+    select.innerHTML = '<option value="">-</option>' + state.settings.payments.map(function (payment) {
+      return '<option value="' + escapeHtml(payment) + '">' + escapeHtml(payment) + '</option>';
+    }).join('');
+    if (selectedPayment && state.settings.payments.includes(selectedPayment)) {
+      select.value = selectedPayment;
+    }
+  }
+
+  function defaultTransactionDate() {
+    var today = new Date();
+    var localDate = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
+    return localDate.slice(0, 7) === state.ui.month ? localDate : state.ui.month + '-01';
+  }
+
+  function updateSalaryLivePreview(value) {
+    var amount = Math.max(Number(value) || 0, 0);
+    byId('salary-live-base').textContent = 'ฐาน ' + formatCurrency(amount);
+    BUDGET_GROUPS.forEach(function (group) {
+      var ratio = state.settings.ratios[group];
+      var ratioPercent = ratio * 100;
+      var shortName = group === 'needs' ? 'จำเป็น' : group === 'wants' ? 'ความสุข' : 'ออม';
+      byId('salary-live-' + group + '-label').textContent = shortName + ' ' + formatPercent(ratioPercent, ratioPercent % 1 === 0 ? 0 : 1);
+      byId('salary-live-' + group).textContent = formatCurrency(amount * ratio);
+    });
+  }
+
+  function openTransactionDialog(transactionId, options) {
+    options = options || {};
+    transactionDialogMode = options.mode || 'general';
+    editingTransactionId = transactionId || null;
+    var transaction = editingTransactionId
+      ? state.transactions.find(function (item) { return item.id === editingTransactionId; })
+      : null;
+    var group = transaction ? transaction.group : (options.group || 'needs');
+    var date = transaction ? transaction.date : (options.date || defaultTransactionDate());
+
+    if (transactionDialogMode === 'salary') {
+      byId('transaction-dialog-title').textContent = transaction
+        ? (L.salaryDialogEdit || 'แก้ไขเงินเดือน') + ' – ' + monthLabel(date.slice(0, 7))
+        : (L.salaryDialogAdd || 'ใส่เงินเดือน') + ' – ' + monthLabel(date.slice(0, 7));
+    } else {
+      byId('transaction-dialog-title').textContent = transaction ? (L.edit || 'แก้ไข') + ' ' + (L.item || 'รายการ') : (L.addTransaction || 'บันทึกรายการ');
+    }
+
+    byId('transaction-form-message').textContent = '';
+    byId('transaction-date').value = date;
+    byId('transaction-group').value = group;
+    byId('transaction-group').disabled = transactionDialogMode === 'salary';
+    byId('transaction-description').value = transaction ? transaction.description : (options.description || '');
+    byId('transaction-amount').value = transaction ? transaction.amount : (options.amount || '');
+    byId('transaction-note').value = transaction ? transaction.note : (options.note || '');
+    refreshCategorySelect(transaction ? transaction.categoryId : (options.categoryId || ''), transaction ? transaction.categoryName : (options.categoryName || ''));
+    refreshPaymentSelect(transaction ? transaction.payment : (options.payment || ''));
+
+    var salaryPreview = byId('salary-live-preview');
+    salaryPreview.hidden = transactionDialogMode !== 'salary';
+    if (transactionDialogMode === 'salary') {
+      updateSalaryLivePreview(byId('transaction-amount').value);
+    }
+
+    var dialog = byId('transaction-dialog');
+    if (typeof dialog.showModal === 'function') {
+      dialog.showModal();
+    } else {
+      dialog.setAttribute('open', '');
+    }
+    window.setTimeout(function () {
+      if (transactionDialogMode === 'salary') {
+        byId('transaction-amount').focus();
+        byId('transaction-amount').select();
+      } else {
+        byId('transaction-date').focus();
+      }
+    }, 30);
+  }
+
+  function openSalaryDialog() {
+    var salaryCategory = ensureSalaryCategory();
+    var transaction = monthlySalaryTransaction(state.ui.month);
+    if (transaction) {
+      openTransactionDialog(transaction.id, { mode: 'salary' });
+      return;
+    }
+    openTransactionDialog(null, {
+      mode: 'salary',
+      group: 'income',
+      categoryId: salaryCategory.id,
+      categoryName: salaryCategory.name,
+      date: defaultTransactionDate(),
+      description: L.salaryDescription || 'เงินเดือนประจำ',
+      payment: state.settings.payments.includes('โอนธนาคาร') ? 'โอนธนาคาร' : ''
+    });
+  }
+
+  function importPayrollFromQuery() {
+    var params = new URLSearchParams(window.location.search);
+    if (params.get('source') !== 'payroll') {
+      return null;
+    }
+
+    var monthKey = String(params.get('month') || '');
+    var amount = Number(params.get('net'));
+    var gross = Number(params.get('gross'));
+    var deduction = Number(params.get('deduction'));
+
+    if (!/^\d{4}-\d{2}$/.test(monthKey)) {
+      monthKey = state.ui.month;
+    }
+
+    if (!hasStoredState) {
+      state.transactions = [];
+    }
+
+    state.ui.month = monthKey;
+    state.ui.year = Number(monthKey.slice(0, 4));
+
+    var imported = Number.isFinite(amount) && amount > 0;
+    if (imported) {
+      var salaryCategory = ensureSalaryCategory();
+      var existingSalaryRows = monthlySalaryTransactions(monthKey);
+      var previous = existingSalaryRows[0] || null;
+      var now = new Date().toISOString();
+      var noteParts = ['นำเข้าเงินสุทธิจาก Monthly Salary Dashboard'];
+      if (Number.isFinite(gross) && gross >= 0) {
+        noteParts.push('รายได้รวม ' + formatCurrency(gross));
+      }
+      if (Number.isFinite(deduction) && deduction >= 0) {
+        noteParts.push('รายการหัก ' + formatCurrency(deduction));
+      }
+
+      state.transactions = state.transactions.filter(function (transaction) {
+        return !(transaction.date.slice(0, 7) === monthKey && isSalaryTransaction(transaction));
+      });
+      state.transactions.push({
+        id: previous ? previous.id : makeId('tx'),
+        date: monthKey + '-01',
+        description: 'เงินเดือนสุทธิจาก Payroll',
+        categoryId: salaryCategory.id,
+        categoryName: salaryCategory.name,
+        group: 'income',
+        amount: Math.round(amount * 100) / 100,
+        payment: state.settings.payments.includes('โอนธนาคาร') ? 'โอนธนาคาร' : '',
+        note: noteParts.join(' • '),
+        createdAt: previous ? previous.createdAt : now,
+        updatedAt: now
+      });
+    }
+
+    saveState(true);
+    if (window.history && typeof window.history.replaceState === 'function') {
+      try {
+        window.history.replaceState({}, document.title, window.location.pathname + window.location.hash);
+      } catch (error) {
+        // Some browsers restrict History API changes when opening an HTML file directly.
+      }
+    }
+
+    return {
+      imported: imported,
+      amount: imported ? amount : 0,
+      month: monthKey
+    };
+  }
+
+  function closeTransactionDialog() {
+    var dialog = byId('transaction-dialog');
+    if (typeof dialog.close === 'function') {
+      dialog.close();
+    } else {
+      dialog.removeAttribute('open');
+    }
+    byId('transaction-group').disabled = false;
+    byId('salary-live-preview').hidden = true;
+    editingTransactionId = null;
+    transactionDialogMode = 'general';
+  }
+
+  function handleTransactionSubmit(event) {
+    event.preventDefault();
+    var date = byId('transaction-date').value;
+    var group = byId('transaction-group').value;
+    var categoryId = byId('transaction-category').value;
+    var amount = Number(byId('transaction-amount').value);
+    var category = getCategory(categoryId);
+
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !VALID_GROUPS.includes(group) || !category || category.group !== group || !Number.isFinite(amount) || amount <= 0) {
+      byId('transaction-form-message').textContent = L.transactionValidation || 'กรุณากรอกวันที่ กลุ่ม หมวด และจำนวนเงินที่มากกว่า 0 ให้ครบ';
+      return;
+    }
+
+    var transaction = {
+      id: editingTransactionId || makeId('tx'),
+      date: date,
+      description: byId('transaction-description').value.trim() || category.name,
+      categoryId: category.id,
+      categoryName: category.name,
+      group: group,
+      amount: Math.round(amount * 100) / 100,
+      payment: byId('transaction-payment').value,
+      note: byId('transaction-note').value.trim(),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+
+    if (editingTransactionId) {
+      var index = state.transactions.findIndex(function (item) { return item.id === editingTransactionId; });
+      if (index >= 0) {
+        transaction.createdAt = state.transactions[index].createdAt || transaction.createdAt;
+        state.transactions[index] = transaction;
+      }
+    } else {
+      state.transactions.push(transaction);
+    }
+
+    state.ui.month = date.slice(0, 7);
+    state.ui.year = Number(date.slice(0, 4));
+    var savedMode = transactionDialogMode;
+    saveState(true);
+    closeTransactionDialog();
+    renderAll();
+    showToast(savedMode === 'salary' ? (L.salarySaved || 'บันทึกเงินเดือนแล้ว') : (L.save || 'บันทึกแล้ว'));
+  }
+
+  function deleteTransaction(transactionId) {
+    var transaction = state.transactions.find(function (item) { return item.id === transactionId; });
+    if (!transaction) {
+      return;
+    }
+    if (!window.confirm((L.delete || 'Delete') + ': ' + transaction.description + '?')) {
+      return;
+    }
+    state.transactions = state.transactions.filter(function (item) {
+      return item.id !== transactionId;
+    });
+    saveState(true);
+    renderAll();
+    showToast(L.delete || 'Deleted');
+  }
+
+  function exportCsv() {
+    var headers = [
+      L.date || 'Date',
+      L.item || 'Item',
+      L.category || 'Category',
+      L.group || 'Group',
+      L.amount || 'Amount',
+      L.payment || 'Payment',
+      L.note || 'Note'
+    ];
+    var rows = sortedTransactions(state.transactions).map(function (transaction) {
+      return [
+        transaction.date,
+        transaction.description,
+        transaction.categoryName,
+        groupLabel(transaction.group),
+        transaction.amount,
+        transaction.payment,
+        transaction.note
+      ];
+    });
+    var csv = [headers].concat(rows).map(function (row) {
+      return row.map(csvCell).join(',');
+    }).join('\r\n');
+    downloadBlob('\ufeff' + csv, 'text/csv;charset=utf-8', 'money-flow-503020-' + new Date().toISOString().slice(0, 10) + '.csv');
+    showToast(L.exportCsv || 'CSV exported');
+  }
+
+  function csvCell(value) {
+    var text = String(value == null ? '' : value);
+    if (/[",\r\n]/.test(text)) {
+      return '"' + text.replace(/"/g, '""') + '"';
+    }
+    return text;
+  }
+
+  function backupJson() {
+    var backup = {
+      app: 'Money Flow 50/30/20',
+      version: Number(SEED.version) || 3,
+      exportedAt: new Date().toISOString(),
+      state: state
+    };
+    downloadBlob(JSON.stringify(backup, null, 2), 'application/json;charset=utf-8', 'money-flow-503020-backup-' + new Date().toISOString().slice(0, 10) + '.json');
+    showToast(L.backupJson || 'Backup created');
+  }
+
+  function restoreJson(file) {
+    if (!file) {
+      return;
+    }
+    var reader = new FileReader();
+    reader.onload = function () {
+      try {
+        var parsed = JSON.parse(String(reader.result || ''));
+        var restored = parsed && parsed.state ? parsed.state : parsed;
+        state = normalizeState(restored);
+        saveState(true);
+        renderAll();
+        showToast(L.restoreJson || 'Backup restored');
+      } catch (error) {
+        showToast('Invalid JSON backup file.', true);
+      }
+      byId('restore-json-input').value = '';
+    };
+    reader.onerror = function () {
+      showToast('Could not read the selected file.', true);
+      byId('restore-json-input').value = '';
+    };
+    reader.readAsText(file, 'utf-8');
+  }
+
+  function downloadBlob(content, type, filename) {
+    var blob = new Blob([content], { type: type });
+    var url = URL.createObjectURL(blob);
+    var link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+  }
+
+  function showToast(message, isError) {
+    var toast = byId('toast');
+    window.clearTimeout(toastTimer);
+    toast.textContent = message;
+    toast.classList.toggle('is-error', Boolean(isError));
+    toast.classList.add('is-visible');
+    toastTimer = window.setTimeout(function () {
+      toast.classList.remove('is-visible');
+    }, 2600);
+  }
+
+  function bindEvents() {
+    document.querySelectorAll('.nav-button').forEach(function (button) {
+      button.addEventListener('click', function () {
+        setView(button.getAttribute('data-view'));
+      });
+    });
+
+    document.querySelectorAll('[data-go-view]').forEach(function (button) {
+      button.addEventListener('click', function () {
+        setView(button.getAttribute('data-go-view'));
+      });
+    });
+
+    byId('month-input').addEventListener('change', function (event) {
+      var value = event.target.value;
+      if (/^\d{4}-\d{2}$/.test(value)) {
+        state.ui.month = value;
+        state.ui.year = Number(value.slice(0, 4));
+        saveState(true);
+        renderAll();
+      }
+    });
+
+    byId('summary-year-input').addEventListener('change', function (event) {
+      var year = Number(event.target.value);
+      if (Number.isInteger(year) && year >= 2000 && year <= 2100) {
+        state.ui.year = year;
+        saveState(true);
+        renderSummary();
+        setView('summary');
+      }
+    });
+
+    byId('transaction-search').addEventListener('input', renderTransactions);
+    byId('transaction-group-filter').addEventListener('change', renderTransactions);
+
+    byId('add-transaction-button').addEventListener('click', function () {
+      openTransactionDialog();
+    });
+    byId('salary-quick-button').addEventListener('click', openSalaryDialog);
+    byId('salary-plan-button').addEventListener('click', openSalaryDialog);
+    byId('transaction-amount').addEventListener('input', function (event) {
+      if (transactionDialogMode === 'salary') {
+        updateSalaryLivePreview(event.target.value);
+      }
+    });
+    byId('dialog-close-button').addEventListener('click', closeTransactionDialog);
+    byId('dialog-cancel-button').addEventListener('click', closeTransactionDialog);
+    byId('transaction-group').addEventListener('change', function () {
+      refreshCategorySelect('', '');
+    });
+    byId('transaction-form').addEventListener('submit', handleTransactionSubmit);
+    byId('transaction-dialog').addEventListener('click', function (event) {
+      if (event.target === byId('transaction-dialog')) {
+        closeTransactionDialog();
+      }
+    });
+
+    byId('transaction-table-body').addEventListener('click', function (event) {
+      var button = event.target.closest('[data-action]');
+      if (!button) {
+        return;
+      }
+      var action = button.getAttribute('data-action');
+      var id = button.getAttribute('data-id');
+      if (action === 'edit') {
+        var transaction = state.transactions.find(function (item) { return item.id === id; });
+        openTransactionDialog(id, transaction && isSalaryTransaction(transaction) ? { mode: 'salary' } : {});
+      } else if (action === 'delete') {
+        deleteTransaction(id);
+      }
+    });
+
+    byId('ratio-form').addEventListener('input', updateRatioTotal);
+    byId('ratio-form').addEventListener('submit', function (event) {
+      event.preventDefault();
+      var total = updateRatioTotal();
+      if (Math.abs(total - 100) > 0.005) {
+        byId('ratio-message').textContent = L.ratioMustEqual || 'The total must equal 100%.';
+        return;
+      }
+      state.settings.ratios = {
+        needs: (Number(byId('ratio-needs').value) || 0) / 100,
+        wants: (Number(byId('ratio-wants').value) || 0) / 100,
+        savings: (Number(byId('ratio-savings').value) || 0) / 100
+      };
+      byId('ratio-message').textContent = '';
+      saveState(true);
+      renderAll();
+      showToast(L.saveRatios || 'Ratios saved');
+    });
+
+    byId('category-form').addEventListener('submit', function (event) {
+      event.preventDefault();
+      var name = byId('new-category-name').value.trim();
+      var group = byId('new-category-group').value;
+      if (!name || !VALID_GROUPS.includes(group)) {
+        return;
+      }
+      var duplicate = state.settings.categories.some(function (category) {
+        return category.name.toLocaleLowerCase('th-TH') === name.toLocaleLowerCase('th-TH');
+      });
+      if (duplicate) {
+        showToast('Category already exists.', true);
+        return;
+      }
+      state.settings.categories.push({ id: makeId('cat'), name: name, group: group });
+      byId('new-category-name').value = '';
+      saveState(true);
+      renderSettings();
+      showToast(L.addCategory || 'Category added');
+    });
+
+    byId('category-list').addEventListener('click', function (event) {
+      var button = event.target.closest('[data-category-delete]');
+      if (!button) {
+        return;
+      }
+      var categoryId = button.getAttribute('data-category-delete');
+      var category = getCategory(categoryId);
+      if (!category) {
+        return;
+      }
+      var usedCount = state.transactions.filter(function (transaction) {
+        return transaction.categoryId === categoryId;
+      }).length;
+      var message = (L.delete || 'Delete') + ': ' + category.name + '?';
+      if (usedCount) {
+        message += '\n' + usedCount + ' existing transaction(s) will keep the saved category name.';
+      }
+      if (!window.confirm(message)) {
+        return;
+      }
+      state.settings.categories = state.settings.categories.filter(function (item) {
+        return item.id !== categoryId;
+      });
+      saveState(true);
+      renderSettings();
+      showToast(L.delete || 'Deleted');
+    });
+
+    byId('payment-form').addEventListener('submit', function (event) {
+      event.preventDefault();
+      var value = byId('new-payment-name').value.trim();
+      if (!value) {
+        return;
+      }
+      if (state.settings.payments.some(function (payment) {
+        return payment.toLocaleLowerCase('th-TH') === value.toLocaleLowerCase('th-TH');
+      })) {
+        showToast('Payment method already exists.', true);
+        return;
+      }
+      state.settings.payments.push(value);
+      byId('new-payment-name').value = '';
+      saveState(true);
+      renderPayments();
+      showToast(L.addPayment || 'Payment method added');
+    });
+
+    byId('payment-list').addEventListener('click', function (event) {
+      var button = event.target.closest('[data-payment-delete]');
+      if (!button) {
+        return;
+      }
+      var index = Number(button.getAttribute('data-payment-delete'));
+      var value = state.settings.payments[index];
+      if (!value || !window.confirm((L.delete || 'Delete') + ': ' + value + '?')) {
+        return;
+      }
+      state.settings.payments.splice(index, 1);
+      saveState(true);
+      renderPayments();
+      showToast(L.delete || 'Deleted');
+    });
+
+    [byId('export-csv-button'), byId('settings-export-csv-button')].forEach(function (button) {
+      button.addEventListener('click', exportCsv);
+    });
+    byId('backup-json-button').addEventListener('click', backupJson);
+    byId('restore-json-button').addEventListener('click', function () {
+      byId('restore-json-input').click();
+    });
+    byId('restore-json-input').addEventListener('change', function (event) {
+      restoreJson(event.target.files && event.target.files[0]);
+    });
+
+    byId('reset-sample-button').addEventListener('click', function () {
+      if (!window.confirm('Restore the sample data and replace all current data?')) {
+        return;
+      }
+      state = clone(SEED.defaultState);
+      saveState(true);
+      renderAll();
+      showToast(L.resetSample || 'Sample restored');
+    });
+
+    byId('clear-transactions-button').addEventListener('click', function () {
+      if (!window.confirm('Delete all transactions? Settings and categories will remain.')) {
+        return;
+      }
+      state.transactions = [];
+      saveState(true);
+      renderAll();
+      showToast(L.clearTransactions || 'Transactions cleared');
+    });
+
+    byId('print-button').addEventListener('click', function () {
+      setView('dashboard');
+      window.setTimeout(function () { window.print(); }, 60);
+    });
+  }
+
+  function init() {
+    applyStaticLabels();
+    var payrollTransfer = importPayrollFromQuery();
+    bindEvents();
+    renderAll();
+    if (payrollTransfer) {
+      if (payrollTransfer.imported) {
+        showToast('นำเงินสุทธิ ' + formatCurrency(payrollTransfer.amount) + ' มาวางแผน 50/30/20 แล้ว');
+      } else {
+        showToast('เปิดแผนการเงินสำหรับ ' + monthLabel(payrollTransfer.month) + ' แล้ว กรุณาใส่เงินเดือนสุทธิ');
+      }
+    }
+  }
+
+  init();
+})();
+  </script>
+</body>
+</html>
